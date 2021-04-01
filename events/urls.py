@@ -10,6 +10,8 @@ router = DefaultRouter()
 router.register(r'pinchzoom', PinchZoomViewSet, basename='pinchzoom')
 router.register(r'misclicks', MisClicksViewSet, basename='misclicks')
 router.register(r'scroll', ScrollViewSet, basename='scroll')
+router.register(r'event', EventViewSet, basename='event')
+
 
 urlpatterns = [
 ]

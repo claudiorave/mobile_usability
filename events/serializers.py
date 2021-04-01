@@ -5,7 +5,7 @@ from .models import *
 class MisClicksSerializer(serializers.ModelSerializer):
     class Meta:
         model = MisClicks
-        fields = ['x', 'y', 'timestamp']
+        fields = ['x', 'y', 'elements', 'timestamp']
 
 
 class PinchZoomSerializer(serializers.ModelSerializer):
