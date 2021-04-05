@@ -12,9 +12,9 @@ router.register(r'misclicks', MisClicksViewSet, basename='misclicks')
 router.register(r'scroll', ScrollViewSet, basename='scroll')
 router.register(r'event', EventViewSet, basename='event')
 
-
 urlpatterns = [
+    path('', index, name='index'),
+    path('reset', reset, name='index'),
 ]
 
 urlpatterns += router.urls
-

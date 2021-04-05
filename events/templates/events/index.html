@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mobile Logger</title>
+</head>
+<body>
+<header>Mobile Logger</header>
+<div><a href="/reset"><button>Reset</button></a></div>
+<section>
+    <h2>MisClicks</h2>
+    <table>
+        <th>
+            x
+        </th>
+        <th>
+            y
+        </th>
+        <th>
+            timestamp
+        </th>
+        <th>
+            elements
+        </th>
+        {% for misclicks in misclicks_list %}
+        <tr>
+            <td>{{ misclicks.x }}</td>
+            <td>{{ misclicks.y }}</td>
+            <td>{{ misclicks.timestamp }}</td>
+            <td>{{ misclicks.elements }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+<section>
+    <h2>PinchZoom</h2>
+    <table>
+     <th>
+            timestamp
+        </th>
+        <th>
+            elements
+        </th>
+        {% for pinchzoom in pinchzoom_list %}
+        <tr>
+            <td>{{ pinchzoom.timestamp }}</td>
+            <td>{{ pinchzoom.elements }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+<section>
+    <h2>Scroll</h2>
+    <table>
+     <th>
+            x
+        </th>
+        <th>
+            y
+        </th>
+        <th>
+            timestamp
+        </th>
+        <th>
+            elements
+        </th>
+        {% for scroll in scroll_list %}
+        <tr>
+            <td>{{ scroll.x }}</td>
+            <td>{{ scroll.y }}</td>
+            <td>{{ scroll.timestamp }}</td>
+            <td>{{ scroll.elements }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+
+</body>
+</html>
