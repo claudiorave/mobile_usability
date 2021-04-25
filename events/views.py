@@ -45,9 +45,9 @@ class EventViewSet(ModelViewSet):
 
 
 def index(request):
-    misclicks_list = MisClicks.objects.order_by('timestamp')[:5]
-    pinchzoom_list = PinchZoom.objects.order_by('timestamp')[:5]
-    scroll_list = Scroll.objects.order_by('timestamp')[:5]
+    misclicks_list = MisClicks.objects.order_by('timestamp')[:25]
+    pinchzoom_list = PinchZoom.objects.order_by('timestamp')[:25]
+    scroll_list = Scroll.objects.order_by('timestamp')[:25]
     template = loader.get_template('events/index.html')
     context = {
         'misclicks_list': misclicks_list,
