@@ -9,7 +9,9 @@
 </head>
 <body>
 <header>Mobile Logger</header>
-<div class="buttonHolder"><a href="/reset"><button>RESET</button></a></div>
+<div class="buttonHolder"><a href="/reset">
+    <button>RESET</button>
+</a></div>
 <section>
     <h2>MisClicks</h2>
     <table>
@@ -38,7 +40,7 @@
 <section>
     <h2>PinchZoom</h2>
     <table>
-     <th>
+        <th>
             timestamp
         </th>
         <th>
@@ -55,24 +57,20 @@
 <section>
     <h2>Scroll</h2>
     <table>
-     <th>
-            x
-        </th>
-        <th>
-            y
-        </th>
         <th>
             timestamp
         </th>
         <th>
-            elements
+            scroll_points
+        </th>
+        <th>
+            scroll_objects
         </th>
         {% for scroll in scroll_list %}
         <tr>
-            <td>{{ scroll.x }}</td>
-            <td>{{ scroll.y }}</td>
             <td>{{ scroll.timestamp }}</td>
-            <td>{{ scroll.elements }}</td>
+            <td>{{ scroll.scroll_points }}</td>
+            <td>{{ scroll.scroll_objects }}</td>
         </tr>
         {% endfor %}
     </table>

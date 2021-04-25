@@ -6,7 +6,7 @@ from rest_framework import serializers
 class Event(models.Model):
     type = models.CharField(max_length=50)
     timestamp = models.DateTimeField()
-    elements = models.TextField()
+    elements = models.TextField(null=True, blank=True)
 
 
     class Meta:
@@ -29,6 +29,5 @@ class PinchZoom(Event):
     percentage = models.FloatField(null=True, blank=True)
 
 class Scroll(Event):
-    dom_object = models.TextField()
-    x = models.FloatField()
-    y = models.FloatField()
+    scroll_points = models.TextField()
+    scroll_objects = models.TextField()

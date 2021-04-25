@@ -17,4 +17,4 @@ class PinchZoomSerializer(serializers.ModelSerializer):
 class ScrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scroll
-        fields = ['dom_object', 'x', 'y', 'timestamp']
+        fields = ['scroll_points', 'scroll_objects', 'timestamp']
