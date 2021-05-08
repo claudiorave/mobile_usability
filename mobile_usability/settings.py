@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'events',
     'corsheaders',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'mobile_usability.wsgi.application'
+ASGI_APPLICATION = "mobile_usability.asgi.application"
 
 
 # Database
@@ -127,3 +129,15 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# mysite/settings.py
+# Channels
+ASGI_APPLICATION = 'mobile_usability.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

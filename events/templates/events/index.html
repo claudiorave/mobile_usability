@@ -12,6 +12,26 @@
 <div class="buttonHolder"><a href="/reset">
     <button>RESET</button>
 </a></div>
+<script>
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+    );
+
+    chatSocket.onmessage = function (e) {
+        window.location.reload(true);
+    };
+
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+         const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+    );
+    };
+</script>
 <section>
     <h2>MisClicks</h2>
     <table>
@@ -28,12 +48,12 @@
             elements
         </th>
         {% for misclicks in misclicks_list %}
-        <tr>
-            <td>{{ misclicks.x }}</td>
-            <td>{{ misclicks.y }}</td>
-            <td>{{ misclicks.timestamp }}</td>
-            <td>{{ misclicks.elements }}</td>
-        </tr>
+            <tr>
+                <td>{{ misclicks.x }}</td>
+                <td>{{ misclicks.y }}</td>
+                <td>{{ misclicks.timestamp }}</td>
+                <td>{{ misclicks.elements }}</td>
+            </tr>
         {% endfor %}
     </table>
 </section>
@@ -47,10 +67,10 @@
             elements
         </th>
         {% for pinchzoom in pinchzoom_list %}
-        <tr>
-            <td>{{ pinchzoom.timestamp }}</td>
-            <td>{{ pinchzoom.elements }}</td>
-        </tr>
+            <tr>
+                <td>{{ pinchzoom.timestamp }}</td>
+                <td>{{ pinchzoom.elements }}</td>
+            </tr>
         {% endfor %}
     </table>
 </section>
@@ -67,11 +87,11 @@
             scroll_objects
         </th>
         {% for scroll in scroll_list %}
-        <tr>
-            <td>{{ scroll.timestamp }}</td>
-            <td>{{ scroll.scroll_points }}</td>
-            <td>{{ scroll.scroll_objects }}</td>
-        </tr>
+            <tr>
+                <td>{{ scroll.timestamp }}</td>
+                <td>{{ scroll.scroll_points }}</td>
+                <td>{{ scroll.scroll_objects }}</td>
+            </tr>
         {% endfor %}
     </table>
 </section>
