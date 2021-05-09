@@ -6,7 +6,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 import events.routing
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mobyle_usability.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mobile_usability.settings")
 
 application = ProtocolTypeRouter({
   "http": get_asgi_application(),
