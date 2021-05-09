@@ -1,16 +1,18 @@
 # mysite/asgi.py
 import os
 
-from channels.auth import AuthMiddlewareStack
-from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
-import events.routing
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mobile_usability.settings")
+django_asgi_app = get_asgi_application()
+
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+import events.routing
 
 application = ProtocolTypeRouter({
-  "http": get_asgi_application(),
-  "websocket": AuthMiddlewareStack(
+    "http": django_asgi_app,
+    "websocket": AuthMiddlewareStack(
         URLRouter(
             events.routing.websocket_urlpatterns
         )
