@@ -5,16 +5,16 @@ from .models import *
 class MisClicksSerializer(serializers.ModelSerializer):
     class Meta:
         model = MisClicks
-        fields = ['x', 'y', 'elements', 'timestamp']
+        fields = ['type', 'x', 'y', 'elements', 'timestamp']
 
 
 class PinchZoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = PinchZoom
-        fields = ['elements', 'percentage', 'timestamp']
+        fields = ['type', 'elements', 'percentage', 'timestamp']
 
 
 class ScrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scroll
-        fields = ['scroll_points', 'scroll_objects', 'timestamp']
+        fields = ['type', 'scroll_points', 'scroll_objects', 'timestamp']
