@@ -10,7 +10,7 @@ class Event(models.Model):
 
 
     class Meta:
-        abstract = True
+        abstract = False
 
     @classmethod
     def get_serializer(cls):
@@ -31,3 +31,7 @@ class PinchZoom(Event):
 class Scroll(Event):
     scroll_points = models.TextField()
     scroll_objects = models.TextField()
+
+# class Element(models.Model):
+#     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="elements")
+#     xpath = models.TextField(null=True, blank=True)

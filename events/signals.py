@@ -19,7 +19,7 @@ def create_misclicks(sender, instance, created, **kwargs):
             group_name,
             {
                 'type': 'chat_message',
-                'message': json.dumps(serializer.data)
+                'message': serializer.data
             }
         )
 
@@ -34,7 +34,7 @@ def create_scroll(sender, instance, created, **kwargs):
             group_name,
             {
                 'type': 'chat_message',
-                'message': json.dumps(serializer.data)
+                'message': serializer.data
             }
         )
 
@@ -49,6 +49,6 @@ def create_pinchzoom(sender, instance, created, **kwargs):
             group_name,
             {
                 'type': 'chat_message',
-                'message': json.dumps(serializer.data)
+                'message': serializer.data
             }
         )
