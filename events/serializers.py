@@ -1,8 +1,20 @@
 from rest_framework import serializers
 from .models import *
 
+# class EventSerializer(serializers.ModelSerializer):
+#     timestamp = serializers.SerializerMethodField()
+#
+#     class Meta:
+#         model = MisClicks
+#         fields = ['type', 'elements', 'timestamp']
+#
+#     def get_timestamp(self, obj):
+#         print(obj)
+#         return obj["timestamp"]
+
 
 class MisClicksSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MisClicks
         fields = ['type', 'x', 'y', 'elements', 'timestamp']

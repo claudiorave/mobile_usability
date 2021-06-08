@@ -5,7 +5,7 @@ from rest_framework import serializers
 # Create your models here.
 class Event(models.Model):
     type = models.CharField(max_length=50)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(null=True, blank=True)
     elements = models.TextField(null=True, blank=True)
 
 

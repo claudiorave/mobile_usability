@@ -26,7 +26,6 @@ class ScrollViewSet(ModelViewSet):
 
 class EventViewSet(ModelViewSet):
     def get_queryset(self):
-        print(self.request.data)
         if self.request.data["type"] == 'misclicks':
             return MisClicks.objects.all()
         elif self.request.data["type"] == 'pinchzoom':
@@ -35,7 +34,6 @@ class EventViewSet(ModelViewSet):
             return Scroll.objects.all()
 
     def get_serializer_class(self):
-        print(self.request.data)
         if self.request.data["type"] == 'misclick':
             return MisClicksSerializer
         elif self.request.data["type"] == 'pinchzoom':
