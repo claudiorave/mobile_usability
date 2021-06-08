@@ -14,7 +14,7 @@
 </a></div>
 <script>
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/'
     );
@@ -87,6 +87,7 @@
         </th>
         <tbody>
         {% for misclicks in misclicks_list %}
+           {{ misclicks.id }}
             <tr>
                 <td>{{ misclicks.x }}</td>
                 <td>{{ misclicks.y }}</td>
