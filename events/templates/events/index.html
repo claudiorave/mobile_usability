@@ -55,7 +55,7 @@
             var cell3 = row.insertCell(2);
             let datetime = new Date(json.timestamp);
             let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
-            cell1.innerHTML = new Date(formatted_date);
+            cell1.innerHTML = formatted_date;
             cell2.innerHTML = json["scroll_points"];
             cell3.innerHTML = json["scroll_objects"];
         }
