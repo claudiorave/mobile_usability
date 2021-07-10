@@ -14,14 +14,13 @@
 </a></div>
 <script>
     const chatSocket = new WebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
         + '/ws/'
     );
 
     chatSocket.onmessage = function (e) {
         json = JSON.parse(e.data).message;
-        console.log(new Date(json.timestamp));
         // Find a <table> element with id="myTable":
         var table = document.getElementById(json.type);
 
@@ -41,14 +40,16 @@
             let datetime = new Date(json.timestamp);
             let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
             cell3.innerHTML = formatted_date;
-            cell4.innerHTML = json.elements;
+            json.elements.forEach(e => cell4.innerHTML += (e.xpath + "<br />"))
+
         } else if (json.type === "pinchzoom") {
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
             let datetime = new Date(json.timestamp);
             let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
             cell1.innerHTML = formatted_date;
-            cell2.innerHTML = json.elements;
+            json.elements.forEach(e => cell2.innerHTML += (e.xpath + "<br />"))
+
         } else if (json.type === "scroll") {
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
@@ -64,7 +65,7 @@
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
         const chatSocket = new WebSocket(
-            'wss://'
+            'ws://'
             + window.location.host
             + '/ws/'
         );
@@ -87,12 +88,16 @@
         </th>
         <tbody>
         {% for misclicks in misclicks_list %}
-           {{ misclicks.id }}
             <tr>
                 <td>{{ misclicks.x }}</td>
                 <td>{{ misclicks.y }}</td>
                 <td>{{ misclicks.timestamp }}</td>
-                <td>{{ misclicks.elements }}</td>
+                <td>
+                    {% for element in  misclicks.elements.all %}
+                        {{ element.xpath }}
+                        </br>
+                    {% endfor %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -110,7 +115,10 @@
         {% for pinchzoom in pinchzoom_list %}
             <tr>
                 <td>{{ pinchzoom.timestamp }}</td>
-                <td>{{ pinchzoom.elements }}</td>
+                <td>{% for element in  pinchzoom.elements.all %}
+                    {{ element.xpath }}
+                    </br>
+                {% endfor %}</td>
             </tr>
         {% endfor %}
     </table>

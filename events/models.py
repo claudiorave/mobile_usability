@@ -6,8 +6,6 @@ from rest_framework import serializers
 class Event(models.Model):
     type = models.CharField(max_length=50)
     timestamp = models.DateTimeField(null=True, blank=True)
-    elements = models.TextField(null=True, blank=True)
-
 
     class Meta:
         abstract = False
@@ -21,17 +19,20 @@ class Event(models.Model):
 
         return BaseSerializer
 
+
 class MisClicks(Event):
     x = models.FloatField()
     y = models.FloatField()
 
+
 class PinchZoom(Event):
     percentage = models.FloatField(null=True, blank=True)
 
+
 class Scroll(Event):
     scroll_points = models.TextField()
-    scroll_objects = models.TextField()
 
-# class Element(models.Model):
-#     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="elements")
-#     xpath = models.TextField(null=True, blank=True)
+
+class Element(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="elements", null=True, blank=True)
+    xpath = models.TextField(null=True, blank=True)

@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(Scroll)
 admin.site.register(MisClicks)
 admin.site.register(PinchZoom)
+admin.site.register(Element)
