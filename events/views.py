@@ -32,6 +32,8 @@ class EventViewSet(ModelViewSet):
             return PinchZoom.objects.all()
         elif self.request.data["type"] == 'scroll':
             return Scroll.objects.all()
+        elif self.request.data["type"] == 'orientationchange':
+            return Event.objects.filter(type='orientationchange')
 
     def get_serializer_class(self):
         if self.request.data["type"] == 'misclick':
@@ -40,22 +42,28 @@ class EventViewSet(ModelViewSet):
             return PinchZoomSerializer
         elif self.request.data["type"] == 'scroll':
             return ScrollSerializer
+        elif self.request.data["type"] == 'orientationchange':
+            return OrientationChangeSerializer
 
 
 def index(request):
     misclicks_list = MisClicks.objects.order_by('timestamp')[:25]
     pinchzoom_list = PinchZoom.objects.order_by('timestamp')[:25]
     scroll_list = Scroll.objects.order_by('timestamp')[:25]
+    orientation_change_list = Event.objects.filter(type="orientationchange").order_by('timestamp')[:25]
     template = loader.get_template('events/index.html')
     context = {
         'misclicks_list': misclicks_list,
         'pinchzoom_list': pinchzoom_list,
         'scroll_list': scroll_list,
+        'orientation_change_list': orientation_change_list
     }
     return HttpResponse(template.render(context, request))
+
 
 def reset(request):
     MisClicks.objects.all().delete()
     PinchZoom.objects.all().delete()
     Scroll.objects.all().delete()
+    Event.objects.all().delete()
     return redirect('/')

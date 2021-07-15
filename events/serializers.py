@@ -16,10 +16,22 @@ event_created = django.dispatch.Signal()
 #         print(obj)
 #         return obj["timestamp"]
 
+
 class ElementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Element
         fields = ['event', 'xpath']
+
+
+class OrientationChangeSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        event = Event.objects.create(**validated_data)
+        event_created.send(sender=self.__class__, instance=event)
+        return event
+
+    class Meta:
+        model = Event
+        fields = ['type', 'timestamp']
 
 
 class MisClicksSerializer(serializers.ModelSerializer):

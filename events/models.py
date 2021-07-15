@@ -36,3 +36,5 @@ class Scroll(Event):
 class Element(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="elements", null=True, blank=True)
     xpath = models.TextField(null=True, blank=True)
+
+
