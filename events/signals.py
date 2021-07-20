@@ -6,7 +6,7 @@ import channels.layers
 from asgiref.sync import async_to_sync
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .serializers import MisClicksSerializer, ScrollSerializer, PinchZoomSerializer, event_created, OrientationChangeSerializer
+from .serializers import MisClicksSerializer, ScrollSerializer, PinchZoomSerializer, event_created, OrientationChangeSerializer, DeviceSerializer
 from rest_framework.renderers import JSONRenderer
 
 
@@ -14,6 +14,7 @@ from rest_framework.renderers import JSONRenderer
 def my_callback(sender, instance, **kwargs):
     channel_layer = channels.layers.get_channel_layer()
     group_name = 'chat'
+    print(instance.type)
     if instance.type == 'misclick':
         serializer = MisClicksSerializer(instance)
     elif instance.type == "pinchzoom":
@@ -22,6 +23,8 @@ def my_callback(sender, instance, **kwargs):
         serializer = ScrollSerializer(instance)
     elif instance.type == "orientationchange":
         serializer = OrientationChangeSerializer(instance)
+    elif instance.type == "device":
+        serializer = DeviceSerializer(instance)
 
     async_to_sync(channel_layer.group_send)(
         group_name,

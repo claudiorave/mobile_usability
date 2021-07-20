@@ -34,6 +34,8 @@ class EventViewSet(ModelViewSet):
             return Scroll.objects.all()
         elif self.request.data["type"] == 'orientationchange':
             return Event.objects.filter(type='orientationchange')
+        elif self.request.data["type"] == 'device':
+            return Device.objects.all()
 
     def get_serializer_class(self):
         if self.request.data["type"] == 'misclick':
@@ -44,6 +46,8 @@ class EventViewSet(ModelViewSet):
             return ScrollSerializer
         elif self.request.data["type"] == 'orientationchange':
             return OrientationChangeSerializer
+        elif self.request.data["type"] == 'device':
+            return DeviceSerializer
 
 
 def index(request):

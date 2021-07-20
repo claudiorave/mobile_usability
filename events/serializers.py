@@ -82,3 +82,14 @@ class ScrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scroll
         fields = ['type', 'scroll_points', 'timestamp', 'elements']
+
+class DeviceSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        print(validated_data)
+        event = Device.objects.create(**validated_data)
+        event_created.send(sender=self.__class__, instance=event)
+        return event
+
+    class Meta:
+        model = Device
+        fields = ['type','phone', 'mobile', 'tablet', 'os', 'webkit', 'build', 'user_agent', 'height', 'width']
