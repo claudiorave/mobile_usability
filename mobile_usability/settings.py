@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'events',
     'corsheaders',
     'channels',
-    "bootstrap5",
 ]
 
 MIDDLEWARE = [
