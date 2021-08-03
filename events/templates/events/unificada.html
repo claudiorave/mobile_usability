@@ -1,0 +1,109 @@
+{% extends "events/base.html" %}
+{% block content %}
+    <script>
+        chatSocket.onmessage = function (e) {
+            json = JSON.parse(e.data).message;
+            // Find a <table> element with id="myTable":
+            var table = document.getElementById("eventos");
+
+// Create an empty <tr> element and add it to the 1st position of the table:
+            var row = table.insertRow(-1);
+            var cellType = row.insertCell(0);
+            var cellX = row.insertCell(1);
+            var cellY = row.insertCell(2);
+            var cellScrollPoints = row.insertCell(3);
+            var cellTimeStamp = row.insertCell(4);
+            var cellElements = row.insertCell(5);
+
+// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+            if (json.type !== "device") {
+
+
+// Add some text to the new cells:
+                cellType.innerHTML = json.type;
+                cellX.innerHTML = json.x;
+                cellY.innerHTML = json.y;
+                cellScrollPoints.innerHTML = json.scroll_points;
+                let datetime = new Date(json.timestamp);
+                let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
+                cellTimeStamp.innerHTML = formatted_date;
+                json.elements.forEach(e => cellElements.innerHTML += (e.xpath + "<br />"))
+
+            } else  {
+                console.log(json)
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+                var cell7 = row.insertCell(6);
+                var cell8 = row.insertCell(7);
+                var cell9 = row.insertCell(8);
+                cell1.innerHTML = json["phone"];
+                cell2.innerHTML = json["mobile"];
+                cell3.innerHTML = json["tablet"];
+                cell4.innerHTML = json["user_agent"];
+                cell5.innerHTML = json["build"];
+                cell6.innerHTML = json["webkit"];
+                cell7.innerHTML = json["os"];
+                cell8.innerHTML = json["height"];
+                cell9.innerHTML = json["width"];
+
+            }
+
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+            const chatSocket = new WebSocket(
+                'wss://'
+                + window.location.host
+                + '/ws/'
+            );
+        };
+    </script>
+    <section>
+        <h2 class="display-6">Eventos</h2>
+        <table class="table-bordered" id="eventos">
+            <th>
+                type
+            </th>
+            <th>
+                x
+            </th>
+            <th>
+                y
+            </th>
+            <th>
+                scroll_points
+            </th>
+            <th>
+                timestamp
+            </th>
+            <th>
+                elements
+            </th>
+            <tbody>
+            {% for eventos in eventos_list %}
+                <tr>
+                    <td>{{ eventos.type }}</td>
+
+                    <td>{{ eventos.x }}</td>
+                    <td>{{ eventos.y }}</td>
+                    <td>{{ eventos.scroll_points }}</td>
+
+                    <td>{{ eventos.timestamp }}</td>
+                    <td>
+                        {% for element in  eventos.elements.all %}
+                            {{ element.xpath }}
+                            </br>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+{% endblock %}

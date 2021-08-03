@@ -5,6 +5,8 @@ from django.template import loader
 from django.shortcuts import redirect
 from .models import *
 from .serializers import *
+from itertools import chain
+
 
 
 # Create your views here.
@@ -52,22 +54,43 @@ class EventViewSet(ModelViewSet):
 
 def index(request):
     misclicks_list = MisClicks.objects.order_by('timestamp')[:25]
+    print(misclicks_list)
     pinchzoom_list = PinchZoom.objects.order_by('timestamp')[:25]
     scroll_list = Scroll.objects.order_by('timestamp')[:25]
     orientation_change_list = Event.objects.filter(type="orientationchange").order_by('timestamp')[:25]
+    device = Device.objects.last()
     template = loader.get_template('events/index.html')
     context = {
         'misclicks_list': misclicks_list,
         'pinchzoom_list': pinchzoom_list,
         'scroll_list': scroll_list,
-        'orientation_change_list': orientation_change_list
+        'orientation_change_list': orientation_change_list,
+        'device': device
     }
     return HttpResponse(template.render(context, request))
 
+def unificada(request):
+    misclicks_list = MisClicks.objects.order_by('timestamp')[:25]
+    pinchzoom_list = PinchZoom.objects.order_by('timestamp')[:25]
+    scroll_list = Scroll.objects.order_by('timestamp')[:25]
+    orientation_change_list = Event.objects.filter(type="orientationchange").order_by('timestamp')[:25]
+    device = Device.objects.last()
+    template = loader.get_template('events/unificada.html')
+    eventos_list = list(chain(misclicks_list, pinchzoom_list, scroll_list, orientation_change_list))
+    context = {
+        'eventos_list': eventos_list,
+        'device': device
 
-def reset(request):
+    }
+    return HttpResponse(template.render(context, request))
+
+def reset(request, path):
     MisClicks.objects.all().delete()
     PinchZoom.objects.all().delete()
     Scroll.objects.all().delete()
     Event.objects.all().delete()
-    return redirect('/')
+    Device.objects.all().delete()
+    if path == "index":
+        return redirect("/")
+    else:
+        return redirect("/"+path)

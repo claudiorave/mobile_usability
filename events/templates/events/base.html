@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+{% load static %}
+
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mobile Logger</title>
+    <script src="{% static 'boot/js/bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'events/style.css' %}">
+    <link rel="stylesheet" href="{% static 'boot/css/bootstrap.min.css' %}">
+
+
+</head>
+<body>
+<header class="h1">Mobile Logger</header>
+<div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
+    {% if request.path != "/" %}
+    <a class="btn btn-primary" href="/reset{{ request.path }}/">
+        RESET
+    </a>
+            {% else %}
+ <a class="btn btn-primary" href="/reset/index/">
+        RESET
+    </a>
+    {%  endif %}
+
+    <div class="btn-group" role="group">
+
+        <div class="dropdown" id="drop">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                Vistas
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="/">Por evento</a></li>
+                <li><a class="dropdown-item" href="/unificada">Unificada</a></li>
+                <li><a class="dropdown-item" href="#">Timeline</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+    );
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/'
+        );
+    };
+</script>
+<div id="content">
+    {% block content %}{% endblock %}
+</div>
+<section>
+    <h2 class="display-6">Device</h2>
+    <table class="table-bordered" id="device">
+        <th>
+            phone
+        </th>
+        <th>
+            mobile
+        </th>
+        <th>
+            tablet
+        </th>
+        <th>
+            user_agent
+        </th>
+        <th>
+            build
+        </th>
+        <th>
+            webkit
+        </th>
+        <th>
+            os
+        </th>
+        <th>
+            height
+        </th>
+        <th>
+            width
+        </th>
+         {%  for dev in device %}
+        <tr>
+            <td>{{ device.phone }}</td>
+            <td>{{ device.mobile }}</td>
+            <td>{{ device.tablet }}</td>
+            <td>{{ device.user_agent }}</td>
+
+            <td>{{ device.build }}</td>
+
+            <td>{{ device.webkit }}</td>
+
+            <td>{{ device.os }}</td>
+
+            <td>{{ device.height }}</td>
+
+            <td>{{ device.width }}</td>
+
+
+        </tr>
+{% endfor %}
+    </table>
+</section>
+</body>
+</html>

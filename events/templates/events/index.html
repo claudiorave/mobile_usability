@@ -1,23 +1,7 @@
-<!DOCTYPE html>
-{% load static %}
+{% extends "events/base.html" %}
+{% block content %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'events/style.css' %}">
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Mobile Logger</title>
-</head>
-<body>
-<header>Mobile Logger</header>
-<div class="buttonHolder"><a href="/reset">
-    <button>RESET</button>
-</a></div>
 <script>
-    const chatSocket = new WebSocket(
-        'wss://'
-        + window.location.host
-        + '/ws/'
-    );
 
     chatSocket.onmessage = function (e) {
         json = JSON.parse(e.data).message;
@@ -101,8 +85,8 @@
     };
 </script>
 <section>
-    <h2>MisClicks</h2>
-    <table id="misclick">
+    <h2 class="display-6">MisClicks</h2>
+    <table class="table-bordered" id="misclick">
         <th>
             x
         </th>
@@ -133,8 +117,8 @@
     </table>
 </section>
 <section>
-    <h2>PinchZoom</h2>
-    <table id="pinchzoom">
+    <h2 class="display-6">PinchZoom</h2>
+    <table class="table-bordered" id="pinchzoom">
         <th>
             timestamp
         </th>
@@ -153,8 +137,8 @@
     </table>
 </section>
 <section>
-    <h2>Scroll</h2>
-    <table id="scroll">
+    <h2 class="display-6">Scroll</h2>
+    <table class="table-bordered" id="scroll">
         <th>
             timestamp
         </th>
@@ -174,8 +158,8 @@
     </table>
 </section>
 <section>
-    <h2>Orientation change</h2>
-    <table id="orientationchange">
+    <h2 class="display-6">Orientation change</h2>
+    <table class="table-bordered" id="orientationchange">
         <th>
             timestamp
         </th>
@@ -187,39 +171,6 @@
         {% endfor %}
     </table>
 </section>
-<section>
-    <h2>Device</h2>
-    <table id="device">
-        <th>
-            phone
-        </th>
-        <th>
-            mobile
-        </th>
-        <th>
-            tablet
-        </th>
-        <th>
-            user_agent
-        </th>
-        <th>
-            build
-        </th>
-        <th>
-            webkit
-        </th>
-        <th>
-            os
-        </th>
-        <th>
-            height
-        </th>
-        <th>
-            width
-        </th>
 
-    </table>
-</section>
 
-</body>
-</html>
+{% endblock %}

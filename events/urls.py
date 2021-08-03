@@ -14,7 +14,8 @@ router.register(r'event', EventViewSet, basename='event')
 
 urlpatterns = [
     path('', index, name='index'),
-    path('reset', reset, name='index'),
+    path('reset/<str:path>/', reset, name='index'),
+    path('unificada', unificada, name='unificada'),
 ]
 
 urlpatterns += router.urls

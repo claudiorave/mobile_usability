@@ -26,5 +26,10 @@ button {
 
 }
 table, th, td {
-  border: 1px solid black;
+margin-bottom: 2em;
+}
+
+#drop{
+  /*display: inline;*/
+  /*margin-left: 5em;*/
 }
