@@ -42,14 +42,14 @@
 </div>
 <script>
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/'
     );
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
         const chatSocket = new WebSocket(
-            'ws://'
+            'wss://'
             + window.location.host
             + '/ws/'
         );
@@ -88,6 +88,8 @@
         <th>
             width
         </th>
+                    {%  if device != None %}
+
         <tr>
             <td>{{ device.phone }}</td>
             <td>{{ device.mobile }}</td>
@@ -106,6 +108,7 @@
 
 
         </tr>
+        {% endif %}
     </table>
 </section>
 </body>
