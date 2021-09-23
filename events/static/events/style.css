@@ -1,35 +1,47 @@
-body{
+body {
     margin: 0;
 }
-header{
-text-align: center;
-  background: #DEE2E6;
+
+header {
+    text-align: center;
+    background: #DEE2E6;
     font-size: 30px;
     margin-bottom: 10px;
     font-weight: bolder;
     padding: 5px;
 }
-.buttonHolder{
+
+.buttonHolder {
     text-align: start;
 }
+
 button {
-  background-color: #343A40; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
+    background-color: #343A40; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
     font-weight: bolder;
 
 
 }
+
 table, th, td {
-margin-bottom: 2em;
+    table-layout: fixed;
+    margin-bottom: 2em;
+    height: 1em;
 }
 
-#drop{
-  /*display: inline;*/
-  /*margin-left: 5em;*/
+[data-toggle="popover"]:hover {
+    overflow: hidden;
+    white-space: normal;
+    color: #0a58ca;
+}
+
+#drop {
+    /*display: inline;*/
+    /*margin-left: 5em;*/
 }

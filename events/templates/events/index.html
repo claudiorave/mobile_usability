@@ -1,176 +1,181 @@
 {% extends "events/base.html" %}
 {% block content %}
 
-<script>
+    <script>
 
-    chatSocket.onmessage = function (e) {
-        json = JSON.parse(e.data).message;
-        // Find a <table> element with id="myTable":
-        var table = document.getElementById(json.type);
+        chatSocket.onmessage = function (e) {
+            json = JSON.parse(e.data).message;
+            // Find a <table> element with id="myTable":
+            var table = document.getElementById(json.type);
 
 // Create an empty <tr> element and add it to the 1st position of the table:
-        var row = table.insertRow(-1);
+            var row = table.insertRow(-1);
 
 // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
-        if (json.type === "misclick") {
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            var cell4 = row.insertCell(3);
+            if (json.type === "misclick") {
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
 
 // Add some text to the new cells:
-            cell1.innerHTML = json.x;
-            cell2.innerHTML = json.y;
-            let datetime = new Date(json.timestamp);
-            let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
-            cell3.innerHTML = formatted_date;
-            json.elements.forEach(e => cell4.innerHTML += (e.xpath + "<br />"))
+                cell1.innerHTML = json.x;
+                cell2.innerHTML = json.y;
+                let datetime = new Date(json.timestamp);
+                let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
+                cell3.innerHTML = formatted_date;
+                json.elements.forEach(e => cell4.innerHTML += (e.xpath + "<br />"))
 
-        } else if (json.type === "pinchzoom") {
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            let datetime = new Date(json.timestamp);
-            let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
-            cell1.innerHTML = formatted_date;
-            json.elements.forEach(e => cell2.innerHTML += (e.xpath + "<br />"))
+            } else if (json.type === "pinchzoom") {
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                let datetime = new Date(json.timestamp);
+                let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
+                cell1.innerHTML = formatted_date;
+                json.elements.forEach(e => cell2.innerHTML += (e.xpath + "<br />"))
 
-        } else if (json.type === "scroll") {
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            let datetime = new Date(json.timestamp);
-            let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
-            cell1.innerHTML = formatted_date;
-            cell2.innerHTML = json["scroll_points"];
-            cell3.innerHTML = json["scroll_objects"];
-        } else if (json.type === "orientationchange") {
-            console.log(json)
-            var cell1 = row.insertCell(0);
-            let datetime = new Date(json.timestamp);
-            let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
-            cell1.innerHTML = formatted_date;
+            } else if (json.type === "scroll") {
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                let datetime = new Date(json.timestamp);
+                let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
+                cell1.innerHTML = formatted_date;
+                cell2.innerHTML = json["scroll_points"];
+                cell3.innerHTML = json["scroll_objects"];
+            } else if (json.type === "orientationchange") {
+                console.log(json)
+                var cell1 = row.insertCell(0);
+                let datetime = new Date(json.timestamp);
+                let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
+                cell1.innerHTML = formatted_date;
 
-        }else if (json.type === "device") {
-            console.log(json)
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            var cell4 = row.insertCell(3);
-            var cell5 = row.insertCell(4);
-            var cell6 = row.insertCell(5);
-            var cell7 = row.insertCell(6);
-            var cell8 = row.insertCell(7);
-            var cell9 = row.insertCell(8);
-            cell1.innerHTML = json["phone"];
-            cell2.innerHTML = json["mobile"];
-            cell3.innerHTML = json["tablet"];
-            cell4.innerHTML = json["user_agent"];
-            cell5.innerHTML = json["build"];
-            cell6.innerHTML = json["webkit"];
-            cell7.innerHTML = json["os"];
-            cell8.innerHTML = json["height"];
-            cell9.innerHTML = json["width"];
+            } else if (json.type === "device") {
+                console.log(table)
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+                var cell7 = row.insertCell(6);
+                var cell8 = row.insertCell(7);
+                var cell9 = row.insertCell(8);
+                cell1.innerHTML = json["phone"];
+                cell2.innerHTML = json["mobile"];
+                cell3.innerHTML = json["tablet"];
+                cell4.innerHTML = json["user_agent"];
+                cell5.innerHTML = json["build"];
+                cell6.innerHTML = json["webkit"];
+                cell7.innerHTML = json["os"];
+                cell8.innerHTML = json["height"];
+                cell9.innerHTML = json["width"];
 
-        }
+            }
 
-    };
+        };
 
-    chatSocket.onclose = function (e) {
-        console.error('Chat socket closed unexpectedly');
-        const chatSocket = new WebSocket(
-            'wss://'
-            + window.location.host
-            + '/ws/'
-        );
-    };
-</script>
-<section>
-    <h2 class="display-6">MisClicks</h2>
-    <table class="table-bordered" id="misclick">
-        <th>
-            x
-        </th>
-        <th>
-            y
-        </th>
-        <th>
-            timestamp
-        </th>
-        <th>
-            elements
-        </th>
-        <tbody>
-        {% for misclicks in misclicks_list %}
-            <tr>
-                <td>{{ misclicks.x }}</td>
-                <td>{{ misclicks.y }}</td>
-                <td>{{ misclicks.timestamp }}</td>
-                <td>
-                    {% for element in  misclicks.elements.all %}
-                        {{ element.xpath }}
-                        </br>
-                    {% endfor %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</section>
-<section>
-    <h2 class="display-6">PinchZoom</h2>
-    <table class="table-bordered" id="pinchzoom">
-        <th>
-            timestamp
-        </th>
-        <th>
-            elements
-        </th>
-        {% for pinchzoom in pinchzoom_list %}
-            <tr>
-                <td>{{ pinchzoom.timestamp }}</td>
-                <td>{% for element in  pinchzoom.elements.all %}
-                    {{ element.xpath }}
-                    </br>
-                {% endfor %}</td>
-            </tr>
-        {% endfor %}
-    </table>
-</section>
-<section>
-    <h2 class="display-6">Scroll</h2>
-    <table class="table-bordered" id="scroll">
-        <th>
-            timestamp
-        </th>
-        <th>
-            scroll_points
-        </th>
-        <th>
-            scroll_objects
-        </th>
-        {% for scroll in scroll_list %}
-            <tr>
-                <td>{{ scroll.timestamp }}</td>
-                <td>{{ scroll.scroll_points }}</td>
-                <td>{{ scroll.scroll_objects }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-</section>
-<section>
-    <h2 class="display-6">Orientation change</h2>
-    <table class="table-bordered" id="orientationchange">
-        <th>
-            timestamp
-        </th>
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+            const chatSocket = new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/'
+            );
+        };
+    </script>
+    <section>
+        <h2 class="display-6">MisClicks</h2>
+        <table class="table-bordered" id="misclick">
+            <th>
+                x
+            </th>
+            <th>
+                y
+            </th>
+            <th>
+                timestamp
+            </th>
+            <th>
+                elements
+            </th>
+            <tbody>
+            {% for misclicks in misclicks_list %}
+                <tr>
+                    <td>{{ misclicks.x }}</td>
+                    <td>{{ misclicks.y }}</td>
+                    <td>{{ misclicks.timestamp }}</td>
+                    <td data-container="body" data-toggle="popover"
+                        data-placement="left" data-content="{% for element in  misclicks.elements.all %}
+                        {{ element.xpath }}<br>
+                    {% endfor %}">
+                        {{ misclicks.elements.first.xpath }}
 
-        {% for orientation_change in orientation_change_list %}
-            <tr>
-                <td>{{ orientation_change.timestamp }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-</section>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section>
+        <h2 class="display-6">PinchZoom</h2>
+        <table class="table-bordered" id="pinchzoom">
+            <th>
+                timestamp
+            </th>
+            <th>
+                elements
+            </th>
+            {% for pinchzoom in pinchzoom_list %}
+                <tr>
+                    <td>{{ pinchzoom.timestamp }}</td>
+                    <td data-container="body" data-toggle="popover"
+                        data-placement="left" data-content="{% for element in  pinchzoom.elements.all %}
+                        {{ pinchzoom.xpath }}<br>
+                    {% endfor %}">
+                        {{ pinchzoom.elements.first.xpath }}
+
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+    <section>
+        <h2 class="display-6">Scroll</h2>
+        <table class="table-bordered" id="scroll">
+            <th>
+                timestamp
+            </th>
+            <th>
+                scroll_points
+            </th>
+            <th>
+                scroll_objects
+            </th>
+            {% for scroll in scroll_list %}
+                <tr>
+                    <td>{{ scroll.timestamp }}</td>
+                    <td>{{ scroll.scroll_points }}</td>
+                    <td>{{ scroll.scroll_objects }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+    <section>
+        <h2 class="display-6">Orientation change</h2>
+        <table class="table-bordered" id="orientationchange">
+            <th>
+                timestamp
+            </th>
+
+            {% for orientation_change in orientation_change_list %}
+                <tr>
+                    <td>{{ orientation_change.timestamp }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+
 
 
 {% endblock %}

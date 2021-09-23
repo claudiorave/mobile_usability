@@ -6,9 +6,11 @@
 <head>
     <meta charset="utf-8">
     <title>Mobile Logger</title>
-    <script src="{% static 'boot/js/bootstrap.bundle.min.js' %}"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+
     <link rel="stylesheet" type="text/css" href="{% static 'events/style.css' %}">
-    <link rel="stylesheet" href="{% static 'boot/css/bootstrap.min.css' %}">
 
 
 </head>
@@ -16,14 +18,14 @@
 <header class="h1">Mobile Logger</header>
 <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
     {% if request.path != "/" %}
-    <a class="btn btn-primary" href="/reset{{ request.path }}/">
-        RESET
-    </a>
-            {% else %}
- <a class="btn btn-primary" href="/reset/index/">
-        RESET
-    </a>
-    {%  endif %}
+        <a class="btn btn-primary" href="/reset{{ request.path }}/">
+            RESET
+        </a>
+    {% else %}
+        <a class="btn btn-primary" href="/reset/index/">
+            RESET
+        </a>
+    {% endif %}
 
     <div class="btn-group" role="group">
 
@@ -42,14 +44,14 @@
 </div>
 <script>
     const chatSocket = new WebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
         + '/ws/'
     );
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
         const chatSocket = new WebSocket(
-            'wss://'
+            'ws://'
             + window.location.host
             + '/ws/'
         );
@@ -88,28 +90,35 @@
         <th>
             width
         </th>
-                    {%  if device != None %}
+        {% if device != None %}
 
-        <tr>
-            <td>{{ device.phone }}</td>
-            <td>{{ device.mobile }}</td>
-            <td>{{ device.tablet }}</td>
-            <td>{{ device.user_agent }}</td>
+            <tr>
+                <td>{{ device.phone }}</td>
+                <td>{{ device.mobile }}</td>
+                <td>{{ device.tablet }}</td>
+                <td>{{ device.user_agent }}</td>
 
-            <td>{{ device.build }}</td>
+                <td>{{ device.build }}</td>
 
-            <td>{{ device.webkit }}</td>
+                <td>{{ device.webkit }}</td>
 
-            <td>{{ device.os }}</td>
+                <td>{{ device.os }}</td>
 
-            <td>{{ device.height }}</td>
+                <td>{{ device.height }}</td>
 
-            <td>{{ device.width }}</td>
+                <td>{{ device.width }}</td>
 
 
-        </tr>
+            </tr>
         {% endif %}
     </table>
 </section>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>$(function () {
+  $('[data-toggle="popover"]').popover({html: true})
+})
+    </script>
 </body>
 </html>
