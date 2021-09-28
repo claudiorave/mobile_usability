@@ -23,16 +23,35 @@
                 cell2.innerHTML = json.y;
                 let datetime = new Date(json.timestamp);
                 let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
+                let elementos = "";
+                json.elements.forEach(e=> elementos += e.xpath + "\n");
                 cell3.innerHTML = formatted_date;
-                json.elements.forEach(e => cell4.innerHTML += (e.xpath + "<br />"))
+                 cell4.setAttribute("data-container", "body")
+                cell4.setAttribute("data-toggle", "popover")
+                cell4.setAttribute("data-content", elementos )
+                cell4.setAttribute("data-placement", "left")
+               cell4.innerHTML = json.elements[0].xpath
+                $(function () {
+  $('[data-toggle="popover"]').popover({html: true})
+})
 
             } else if (json.type === "pinchzoom") {
                 var cell1 = row.insertCell(0);
                 var cell2 = row.insertCell(1);
+                let elementos = "";
+                json.elements.forEach(e=> elementos += e.xpath + "\n");
                 let datetime = new Date(json.timestamp);
                 let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
                 cell1.innerHTML = formatted_date;
-                json.elements.forEach(e => cell2.innerHTML += (e.xpath + "<br />"))
+                cell2.setAttribute("data-container", "body")
+                cell2.setAttribute("data-toggle", "popover")
+                cell2.setAttribute("data-content", elementos )
+                cell2.setAttribute("data-placement", "left")
+                $(function () {
+  $('[data-toggle="popover"]').popover({html: true})
+})
+
+               cell2.innerHTML = json.elements[0].xpath
 
             } else if (json.type === "scroll") {
                 var cell1 = row.insertCell(0);
@@ -131,7 +150,7 @@
                     <td>{{ pinchzoom.timestamp }}</td>
                     <td data-container="body" data-toggle="popover"
                         data-placement="left" data-content="{% for element in  pinchzoom.elements.all %}
-                        {{ pinchzoom.xpath }}<br>
+                        {{ element.xpath }}<br>
                     {% endfor %}">
                         {{ pinchzoom.elements.first.xpath }}
 
