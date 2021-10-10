@@ -84,6 +84,21 @@ def unificada(request):
     }
     return HttpResponse(template.render(context, request))
 
+def timeline(request):
+    misclicks_list = MisClicks.objects.order_by('timestamp')[:25]
+    pinchzoom_list = PinchZoom.objects.order_by('timestamp')[:25]
+    scroll_list = Scroll.objects.order_by('timestamp')[:25]
+    orientation_change_list = Event.objects.filter(type="orientationchange").order_by('timestamp')[:25]
+    device = Device.objects.last()
+    template = loader.get_template('events/timeline.html')
+    eventos_list = list(chain(misclicks_list, pinchzoom_list, scroll_list, orientation_change_list))
+    context = {
+        'eventos_list': eventos_list,
+        'device': device
+
+    }
+    return HttpResponse(template.render(context, request))
+
 def reset(request, path):
     MisClicks.objects.all().delete()
     PinchZoom.objects.all().delete()

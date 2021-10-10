@@ -16,6 +16,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('reset/<str:path>/', reset, name='index'),
     path('unificada', unificada, name='unificada'),
+    path('timeline', timeline, name='timeline'),
 ]
 
 urlpatterns += router.urls

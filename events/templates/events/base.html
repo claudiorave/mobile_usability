@@ -37,21 +37,21 @@
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li><a class="dropdown-item" href="/">Por evento</a></li>
                 <li><a class="dropdown-item" href="/unificada">Unificada</a></li>
-                <li><a class="dropdown-item" href="#">Timeline</a></li>
+                <li><a class="dropdown-item" href="/timeline">Timeline</a></li>
             </ul>
         </div>
     </div>
 </div>
 <script>
     const chatSocket = new WebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
         + '/ws/'
     );
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
         const chatSocket = new WebSocket(
-            'wss://'
+            'ws://'
             + window.location.host
             + '/ws/'
         );
@@ -122,5 +122,6 @@
 $('.dropdown-toggle').dropdown()
 
     </script>
+<script src="{% static 'events/scripts.js' %}"></script>
 </body>
 </html>
