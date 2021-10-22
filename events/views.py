@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from .models import *
 from .serializers import *
 from itertools import chain
-
+from json import dumps
 
 
 # Create your views here.
@@ -69,6 +69,7 @@ def index(request):
     }
     return HttpResponse(template.render(context, request))
 
+
 def unificada(request):
     misclicks_list = MisClicks.objects.order_by('timestamp')[:25]
     pinchzoom_list = PinchZoom.objects.order_by('timestamp')[:25]
@@ -84,20 +85,39 @@ def unificada(request):
     }
     return HttpResponse(template.render(context, request))
 
+
 def timeline(request):
     misclicks_list = MisClicks.objects.order_by('timestamp')[:25]
+    serializer = MisClicksSerializer(misclicks_list, many=True)
+    misclicks_data = serializer.data
     pinchzoom_list = PinchZoom.objects.order_by('timestamp')[:25]
+    serializer = PinchZoomSerializer(pinchzoom_list, many=True)
+    pinchzoom_data = serializer.data
     scroll_list = Scroll.objects.order_by('timestamp')[:25]
+    serializer = ScrollSerializer(scroll_list, many=True)
+    scroll_data = serializer.data
     orientation_change_list = Event.objects.filter(type="orientationchange").order_by('timestamp')[:25]
+    serializer = OrientationChangeSerializer(orientation_change_list, many=True)
+    orientation_change_data = serializer.data
     device = Device.objects.last()
     template = loader.get_template('events/timeline.html')
     eventos_list = list(chain(misclicks_list, pinchzoom_list, scroll_list, orientation_change_list))
+    data_list = list(chain(misclicks_data, pinchzoom_data, scroll_data, orientation_change_data))
+    sorted(data_list, key=lambda i: (i['timestamp']))
+    eventos = Event.objects.order_by('timestamp')[:25]
+    serializer = EventSerializer(eventos, many=True)
     context = {
         'eventos_list': eventos_list,
-        'device': device
+        'device': device,
+        'dataJSON': dumps(serializer.data),
+        'data_list': dumps(data_list)
+
+
 
     }
+    print(serializer.data)
     return HttpResponse(template.render(context, request))
+
 
 def reset(request, path):
     MisClicks.objects.all().delete()
@@ -108,4 +128,4 @@ def reset(request, path):
     if path == "index":
         return redirect("/")
     else:
-        return redirect("/"+path)
+        return redirect("/" + path)

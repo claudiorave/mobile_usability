@@ -5,16 +5,10 @@ import django.dispatch
 event_created = django.dispatch.Signal()
 
 
-# class EventSerializer(serializers.ModelSerializer):
-#     timestamp = serializers.SerializerMethodField()
-#
-#     class Meta:
-#         model = MisClicks
-#         fields = ['type', 'elements', 'timestamp']
-#
-#     def get_timestamp(self, obj):
-#         print(obj)
-#         return obj["timestamp"]
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = '__all__'
 
 
 class ElementSerializer(serializers.ModelSerializer):
@@ -83,6 +77,7 @@ class ScrollSerializer(serializers.ModelSerializer):
         model = Scroll
         fields = ['type', 'scroll_points', 'timestamp', 'elements']
 
+
 class DeviceSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         print(validated_data)
@@ -92,4 +87,4 @@ class DeviceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Device
-        fields = ['type','phone', 'mobile', 'tablet', 'os', 'webkit', 'build', 'user_agent', 'height', 'width']
+        fields = ['type', 'phone', 'mobile', 'tablet', 'os', 'webkit', 'build', 'user_agent', 'height', 'width']

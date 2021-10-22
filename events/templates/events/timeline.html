@@ -6,8 +6,8 @@
 <head>
     <meta charset="utf-8">
     <title>Mobile Logger</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 
     <link rel="stylesheet" type="text/css" href="{% static 'events/style.css' %}">
@@ -48,6 +48,11 @@
         + window.location.host
         + '/ws/'
     );
+    chatSocket.onmessage = function (e) {
+        json = JSON.parse(e.data).message;
+        console.log(json);
+    }
+
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
         const chatSocket = new WebSocket(
@@ -60,12 +65,12 @@
 
 
 <section id="timeline">
-<div id="lineCont">
-  <div id="line"></div>
-  <div id="span">Date Placeholder</div>
-</div>
-<div id="mainCont">
-</div>
+    <div id="lineCont">
+        <div id="line"></div>
+        <div id="span">Date Placeholder</div>
+    </div>
+    <div id="mainCont">
+    </div>
 
 </section>
 
@@ -122,123 +127,131 @@
         {% endif %}
     </table>
 </section>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 <script>$(function () {
-  $('[data-toggle="popover"]').popover({html: true})
+    $('[data-toggle="popover"]').popover({html: true})
 })
 $('.dropdown-toggle').dropdown()
 
-    </script>
+</script>
 <script>
     //Sample dates
-var dates = ["6/12/2015", "8/15/2015", "10/22/2015", "12/21/2015", "12/22/2015"];
-//For the purpose of stringifying MM/DD/YYYY date format
-var monthSpan = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-//Format MM/DD/YYYY into string
-function dateSpan(date) {
-  var month = date.split('/')[0];
-  month = monthSpan[month - 1];
-  var day = date.split('/')[1];
-  if (day.charAt(0) == '0') {
-    day = day.charAt(1);
-  }
-  var year = date.split('/')[2];
 
-  //Spit it out!
-  return month + " " + day + ", " + year;
-}
+    //Main function. Draw your circles.
+    function makeCircles() {
+        //Forget the timeline if there's only one date. Who needs it!?
+        var length = {{ eventos_list|length }}
+        var dataJSON = JSON.parse("{{ dataJSON|escapejs }}")
+        let datetimeFirst = new Date(dataJSON[0].timestamp);
+        let formattedDateFirst = datetimeFirst.getDate().toString().padStart(2, "0") + "-" + (datetimeFirst.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeFirst.getFullYear().toString().substr(-2) + " " + datetimeFirst.getHours() + ":" + datetimeFirst.getMinutes().toString().padStart(2, "0") + ":" + datetimeFirst.getSeconds().toString().padStart(2, "0")
+        console.log(dataJSON)
+        if (length < 2) {
+            $("#line").hide();
+            $("#span").show().text("{{eventos_list.0.type}}");
+            //This is what you really want.
+        } else if (length >= 2) {
+            //Set day, month and year variables for the math
+            var first = formattedDateFirst;
+            let datetimeLast = new Date(dataJSON[length - 1].timestamp);
+            let formattedDateLast = datetimeLast.getDate().toString().padStart(2, "0") + "-" + (datetimeLast.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeLast.getFullYear().toString().substr(-2) + " " + datetimeLast.getHours() + ":" + datetimeLast.getMinutes().toString().padStart(2, "0") + ":" + datetimeLast.getSeconds().toString().padStart(2, "0")
+            var last = formattedDateLast;
+            var firstTime = first.split(' ')[1]
+            var firstHour = parseInt(firstTime.split(':')[0]);
+            var firstMin = parseInt(firstTime.split(':')[1]);
+            var firstSec = parseInt(firstTime.split(':')[2])
 
-//Main function. Draw your circles.
-function makeCircles() {
-  //Forget the timeline if there's only one date. Who needs it!?
-  if (dates.length < 2) {
-    $("#line").hide();
-    $("#span").show().text(dateSpan(dates[0]));
-    //This is what you really want.
-  } else if (dates.length >= 2) {
-    //Set day, month and year variables for the math
-    var first = dates[0];
-    var last = dates[dates.length - 1];
+            var lastTime = last.split(' ')[1]
+            var lastHour = parseInt(lastTime.split(':')[0]);
+            var lastMin = parseInt(lastTime.split(':')[1]);
+            var lastSec = parseInt(lastTime.split(':')[2])
 
-    var firstMonth = parseInt(first.split('/')[0]);
-    var firstDay = parseInt(first.split('/')[1]);
 
-    var lastMonth = parseInt(last.split('/')[0]);
-    var lastDay = parseInt(last.split('/')[1]);
+            //Integer representation of the last day. The first day is represnted as 0
+            var lastInt = ((lastHour - firstHour) * 3600) + ((lastMin - firstMin) * 60) + (lastSec - firstSec);
 
-    //Integer representation of the last day. The first day is represnted as 0
-    var lastInt = ((lastMonth - firstMonth) * 30) + (lastDay - firstDay);
 
-    //Draw first date circle
-    $("#line").append('<div class="circle" id="circle0" style="left: ' + 0 + '%;"><div class="popupSpan">' + dateSpan(dates[0])  + '</div></div>');
-    console.log("{{ eventos_list.0.type }}")
+            //Draw first date circle
+            $("#line").append('<div class="circle" id="circle0" style="left: ' + 0 + '%;"><div class="popupSpan">' + dataJSON[0].type + '</div></div>');
 
-    $("#mainCont").append('<span id="span0" class="center">' + dateSpan(dates[0]) + '</span>');
+            $("#mainCont").append('<span id="span0"  class="center">' + dataJSON[0].type + '<br>' + formattedDateFirst + '<br>' + '</span>');
 
-    //Loop through middle dates
-    for (i = 1; i < dates.length - 1; i++) {
-      var thisMonth = parseInt(dates[i].split('/')[0]);
-      var thisDay = parseInt(dates[i].split('/')[1]);
 
-      //Integer representation of the date
-      var thisInt = ((thisMonth - firstMonth) * 30) + (thisDay - firstDay);
+            //Loop through middle dates
+            for (i = 1; i < length - 1; i++) {
+                let datetimeThis = new Date(dataJSON[i].timestamp);
+                let formattedDateThis = datetimeThis.getDate().toString().padStart(2, "0") + "-" + (datetimeThis.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeThis.getFullYear().toString().substr(-2) + " " + datetimeThis.getHours() + ":" + datetimeThis.getMinutes().toString().padStart(2, "0") + ":" + datetimeThis.getSeconds().toString().padStart(2, "0")
+            var thisDate = formattedDateThis;
+            var thisTime = thisDate.split(' ')[1]
+            var thisHour = parseInt(thisTime.split(':')[0]);
+            var thisMin = parseInt(thisTime.split(':')[1]);
+            var thisSec = parseInt(thisTime.split(':')[2])
 
-      //Integer relative to the first and last dates
-      var relativeInt = thisInt / lastInt;
+                //Integer representation of the date
+                var thisInt = ((thisHour - firstHour) * 3600) + ((thisMin - firstMin) * 60) + (thisSec - firstSec);
 
-      //Draw the date circle
-      $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + relativeInt * 100 + '%;"><div class="popupSpan">' + dateSpan(dates[i]) + '</div></div>');
+                //Integer relative to the first and last dates
+                var relativeInt = thisInt / lastInt;
 
-      $("#mainCont").append('<span id="span' + i + '" class="right">' + dateSpan(dates[i]) + '</span>');
+                //Draw the date circle
+                $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + relativeInt * 100 + '%;"><div class="popupSpan">' + dataJSON[i].type +  '</div></div>');
+
+                $("#mainCont").append('<span id="span' + i + '" class="right">' + dataJSON[i].type + '<br>' + formattedDateThis + '</span>');
+            }
+
+            //Draw the last date circle
+            $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + 99 + '%;"><div class="popupSpan">' + dataJSON[length - 1].type + '</div></div>');
+
+            $("#mainCont").append('<span id="span' + i + '" class="right">' + dataJSON[length - 1].type + '<br>' + formattedDateLast + '<br>' +  '</span>');
+        }
+
+        $(".circle:first").addClass("active");
     }
 
-    //Draw the last date circle
-    $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + 99 + '%;"><div class="popupSpan">' + dateSpan(dates[dates.length - 1]) + '</div></div>');
+    makeCircles();
 
-    $("#mainCont").append('<span id="span' + i + '" class="right">' + dateSpan(dates[i]) + '</span>');
-  }
+    $(".circle").mouseenter(function () {
+        $(this).addClass("hover");
+    });
 
-  $(".circle:first").addClass("active");
-}
+    $(".circle").mouseleave(function () {
+        $(this).removeClass("hover");
+    });
 
-makeCircles();
+    $(".circle").click(function () {
+        var spanNum = $(this).attr("id");
+        selectDate(spanNum);
+    });
 
-$(".circle").mouseenter(function() {
-  $(this).addClass("hover");
-});
+    function selectDate(selector) {
+        $selector = "#" + selector;
+        $spanSelector = $selector.replace("circle", "span");
+        var current = $selector.replace("circle", "");
 
-$(".circle").mouseleave(function() {
-  $(this).removeClass("hover");
-});
+        $(".active").removeClass("active");
+        $($selector).addClass("active");
 
-$(".circle").click(function() {
-  var spanNum = $(this).attr("id");
-  selectDate(spanNum);
-});
+        if ($($spanSelector).hasClass("right")) {
+            $(".center").removeClass("center").addClass("left")
+            $($spanSelector).addClass("center");
+            $($spanSelector).removeClass("right")
+        } else if ($($spanSelector).hasClass("left")) {
+            $(".center").removeClass("center").addClass("right");
+            $($spanSelector).addClass("center");
+            $($spanSelector).removeClass("left");
+        }
+        ;
+    };
 
-function selectDate(selector) {
-  $selector = "#" + selector;
-  $spanSelector = $selector.replace("circle", "span");
-  var current = $selector.replace("circle", "");
-
-  $(".active").removeClass("active");
-  $($selector).addClass("active");
-
-  if ($($spanSelector).hasClass("right")) {
-    $(".center").removeClass("center").addClass("left")
-    $($spanSelector).addClass("center");
-    $($spanSelector).removeClass("right")
-  } else if ($($spanSelector).hasClass("left")) {
-    $(".center").removeClass("center").addClass("right");
-    $($spanSelector).addClass("center");
-    $($spanSelector).removeClass("left");
-  };
-};
-
-console.log()
+    console.log()
 
 
 </script>
