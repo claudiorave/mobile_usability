@@ -144,56 +144,93 @@ $('.dropdown-toggle').dropdown()
 </script>
 <script>
     //Sample dates
+    let dataJSON;
+    dataJSON = JSON.parse("{{ dataJSON|escapejs }}")
 
+    function color(type) {
+        let color;
+        switch (type) {
+            case "misclick":
+                color = "#e97162";
+                break;
+            case "scroll":
+                color = "blue";
+                break;
+            case "pinchzoom":
+                color = "yellow";
+                break;
+            case "orientationchange":
+                color = "green";
+                break;
+        }
+        return color
+    }
 
     //Main function. Draw your circles.
     function makeCircles() {
         //Forget the timeline if there's only one date. Who needs it!?
-        var length = {{ eventos_list|length }}
-        var dataJSON = JSON.parse("{{ dataJSON|escapejs }}")
+
+
+        if (length == 0) {
+            $("#span").show().text("No se registran eventos");
+
+        }
+        var length = dataJSON.length
+        var last = dataJSON[length - 1]
         let datetimeFirst = new Date(dataJSON[0].timestamp);
         let formattedDateFirst = datetimeFirst.getDate().toString().padStart(2, "0") + "-" + (datetimeFirst.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeFirst.getFullYear().toString().substr(-2) + " " + datetimeFirst.getHours() + ":" + datetimeFirst.getMinutes().toString().padStart(2, "0") + ":" + datetimeFirst.getSeconds().toString().padStart(2, "0")
-        console.log(dataJSON)
         if (length < 2) {
             $("#line").hide();
-            $("#span").show().text("{{eventos_list.0.type}}");
+            $("#span").show().text(dataJSON[0].type);
             //This is what you really want.
         } else if (length >= 2) {
             //Set day, month and year variables for the math
             var first = formattedDateFirst;
-            let datetimeLast = new Date(dataJSON[length - 1].timestamp);
+            let datetimeLast = new Date(last.timestamp);
             let formattedDateLast = datetimeLast.getDate().toString().padStart(2, "0") + "-" + (datetimeLast.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeLast.getFullYear().toString().substr(-2) + " " + datetimeLast.getHours() + ":" + datetimeLast.getMinutes().toString().padStart(2, "0") + ":" + datetimeLast.getSeconds().toString().padStart(2, "0")
-            var last = formattedDateLast;
+            var lastDate = formattedDateLast;
             var firstTime = first.split(' ')[1]
-            var firstHour = parseInt(firstTime.split(':')[0]);
-            var firstMin = parseInt(firstTime.split(':')[1]);
-            var firstSec = parseInt(firstTime.split(':')[2])
+            let firstHour = parseInt(firstTime.split(':')[0]);
+            let firstMin = parseInt(firstTime.split(':')[1]);
+            let firstSec = parseInt(firstTime.split(':')[2])
 
-            var lastTime = last.split(' ')[1]
+            var lastTime = lastDate.split(' ')[1]
             var lastHour = parseInt(lastTime.split(':')[0]);
             var lastMin = parseInt(lastTime.split(':')[1]);
             var lastSec = parseInt(lastTime.split(':')[2])
 
 
             //Integer representation of the last day. The first day is represnted as 0
-            var lastInt = ((lastHour - firstHour) * 3600) + ((lastMin - firstMin) * 60) + (lastSec - firstSec);
+            let lastInt = ((lastHour - firstHour) * 3600) + ((lastMin - firstMin) * 60) + (lastSec - firstSec);
 
 
             //Draw first date circle
-            $("#line").append('<div class="circle" id="circle0" style="left: ' + 0 + '%;"><div class="popupSpan">' + dataJSON[0].type + '</div></div>');
+            $("#line").append('<div class="circle" id="circle0" style="left: ' + 0 + '%;background: ' + color(dataJSON[0].type) + ' "><div class="popupSpan">' + dataJSON[0].type + '</div></div>');
+            console.log(dataJSON)
 
-            $("#mainCont").append('<span id="span0"  class="center">' + dataJSON[0].type + '<br>' + formattedDateFirst + '<br>' + '</span>');
+            function xpath(event) {
+                let elemento;
+
+                if (event.elements == undefined) {
+                    elemento = "sdfasdfasdf"
+                } else {
+                    elemento = event.elements[0].xpath
+                }
+                return elemento
+            }
+
+            $("#mainCont").append('<span id="span0"  class="center">' + dataJSON[0].type + '<br>' + formattedDateFirst + '<br>' + xpath(dataJSON[0]) + '</span>');
 
 
             //Loop through middle dates
             for (i = 1; i < length - 1; i++) {
                 let datetimeThis = new Date(dataJSON[i].timestamp);
                 let formattedDateThis = datetimeThis.getDate().toString().padStart(2, "0") + "-" + (datetimeThis.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeThis.getFullYear().toString().substr(-2) + " " + datetimeThis.getHours() + ":" + datetimeThis.getMinutes().toString().padStart(2, "0") + ":" + datetimeThis.getSeconds().toString().padStart(2, "0")
-            var thisDate = formattedDateThis;
-            var thisTime = thisDate.split(' ')[1]
-            var thisHour = parseInt(thisTime.split(':')[0]);
-            var thisMin = parseInt(thisTime.split(':')[1]);
-            var thisSec = parseInt(thisTime.split(':')[2])
+                var thisDate = formattedDateThis;
+                var thisTime = thisDate.split(' ')[1]
+                var thisHour = parseInt(thisTime.split(':')[0]);
+                var thisMin = parseInt(thisTime.split(':')[1]);
+                var thisSec = parseInt(thisTime.split(':')[2])
 
                 //Integer representation of the date
                 var thisInt = ((thisHour - firstHour) * 3600) + ((thisMin - firstMin) * 60) + (thisSec - firstSec);
@@ -202,15 +239,16 @@ $('.dropdown-toggle').dropdown()
                 var relativeInt = thisInt / lastInt;
 
                 //Draw the date circle
-                $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + relativeInt * 100 + '%;"><div class="popupSpan">' + dataJSON[i].type +  '</div></div>');
+                let background =
+                    $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + relativeInt * 100 + '%; background: ' + color(dataJSON[i].type) + '"><div class="popupSpan">' + dataJSON[i].type + '</div></div>');
 
-                $("#mainCont").append('<span id="span' + i + '" class="right">' + dataJSON[i].type + '<br>' + formattedDateThis + '</span>');
+                $("#mainCont").append('<span id="span' + i + '" class="right">' + dataJSON[i].type + '<br>' + formattedDateThis + '<br>' + xpath(dataJSON[i]) + '</span>');
             }
 
             //Draw the last date circle
-            $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + 99 + '%;"><div class="popupSpan">' + dataJSON[length - 1].type + '</div></div>');
+            $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + 99 + '%; background: ' + color(last.type) + '"><div class="popupSpan">' + last.type + '</div></div>');
 
-            $("#mainCont").append('<span id="span' + i + '" class="right">' + dataJSON[length - 1].type + '<br>' + formattedDateLast + '<br>' +  '</span>');
+            $("#mainCont").append('<span id="span' + i + '" class="right">' + last.type + '<br>' + formattedDateLast + '<br>' + xpath(last) +  '</span>');
         }
 
         $(".circle:first").addClass("active");
@@ -252,7 +290,26 @@ $('.dropdown-toggle').dropdown()
     };
 
     console.log()
+    chatSocket.onmessage = function (e) {
+        json = JSON.parse(e.data).message;
+        $("#line").empty()
+        $("#mainCont").empty()
+        dataJSON.push(json)
+        makeCircles();
 
+        $(".circle").mouseenter(function () {
+            $(this).addClass("hover");
+        });
+
+        $(".circle").mouseleave(function () {
+            $(this).removeClass("hover");
+        });
+
+        $(".circle").click(function () {
+            var spanNum = $(this).attr("id");
+            selectDate(spanNum);
+        });
+    }
 
 </script>
 </body>

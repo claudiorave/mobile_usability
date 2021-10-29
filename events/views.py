@@ -109,7 +109,7 @@ def timeline(request):
     context = {
         'eventos_list': eventos_list,
         'device': device,
-        'dataJSON': dumps(serializer.data),
+        'dataJSON': dumps(data_list),
         'data_list': dumps(data_list)
 
 
