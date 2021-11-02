@@ -147,6 +147,7 @@ $('.dropdown-toggle').dropdown()
     let dataJSON;
     dataJSON = JSON.parse("{{ dataJSON|escapejs }}")
 
+
     function color(type) {
         let color;
         switch (type) {
@@ -169,22 +170,30 @@ $('.dropdown-toggle').dropdown()
     //Main function. Draw your circles.
     function makeCircles() {
         //Forget the timeline if there's only one date. Who needs it!?
-
-
+          dataJSON.sort(function (a, b) {
+        return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    });
+    console.log(dataJSON)
+ var length = dataJSON.length
         if (length == 0) {
-            $("#span").show().text("No se registran eventos");
+                        $("#line").hide();
+
+            $("#mainCont").show().text("No se registran eventos");
 
         }
-        var length = dataJSON.length
-        var last = dataJSON[length - 1]
-        let datetimeFirst = new Date(dataJSON[0].timestamp);
-        let formattedDateFirst = datetimeFirst.getDate().toString().padStart(2, "0") + "-" + (datetimeFirst.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeFirst.getFullYear().toString().substr(-2) + " " + datetimeFirst.getHours() + ":" + datetimeFirst.getMinutes().toString().padStart(2, "0") + ":" + datetimeFirst.getSeconds().toString().padStart(2, "0")
-        if (length < 2) {
+        else if (length < 2) {
             $("#line").hide();
-            $("#span").show().text(dataJSON[0].type);
+            $("#mainCont").show().text(dataJSON[0].type);
             //This is what you really want.
         } else if (length >= 2) {
             //Set day, month and year variables for the math
+            $("#line").show();
+            $("#span").hide();
+             var last = dataJSON[length - 1]
+        console.log(new Date(dataJSON[0].timestamp).getTime())
+        console.log(new Date(last.timestamp).getTime())
+        let datetimeFirst = new Date(dataJSON[0].timestamp);
+        let formattedDateFirst = datetimeFirst.getDate().toString().padStart(2, "0") + "-" + (datetimeFirst.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeFirst.getFullYear().toString().substr(-2) + " " + datetimeFirst.getHours() + ":" + datetimeFirst.getMinutes().toString().padStart(2, "0") + ":" + datetimeFirst.getSeconds().toString().padStart(2, "0")
             var first = formattedDateFirst;
             let datetimeLast = new Date(last.timestamp);
             let formattedDateLast = datetimeLast.getDate().toString().padStart(2, "0") + "-" + (datetimeLast.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeLast.getFullYear().toString().substr(-2) + " " + datetimeLast.getHours() + ":" + datetimeLast.getMinutes().toString().padStart(2, "0") + ":" + datetimeLast.getSeconds().toString().padStart(2, "0")
@@ -201,18 +210,17 @@ $('.dropdown-toggle').dropdown()
 
 
             //Integer representation of the last day. The first day is represnted as 0
-            let lastInt = ((lastHour - firstHour) * 3600) + ((lastMin - firstMin) * 60) + (lastSec - firstSec);
+            let lastInt = datetimeLast.getTime() - datetimeFirst.getTime();
 
 
             //Draw first date circle
             $("#line").append('<div class="circle" id="circle0" style="left: ' + 0 + '%;background: ' + color(dataJSON[0].type) + ' "><div class="popupSpan">' + dataJSON[0].type + '</div></div>');
-            console.log(dataJSON)
 
             function xpath(event) {
                 let elemento;
 
                 if (event.elements == undefined) {
-                    elemento = "sdfasdfasdf"
+                    elemento = ""
                 } else {
                     elemento = event.elements[0].xpath
                 }
@@ -233,7 +241,7 @@ $('.dropdown-toggle').dropdown()
                 var thisSec = parseInt(thisTime.split(':')[2])
 
                 //Integer representation of the date
-                var thisInt = ((thisHour - firstHour) * 3600) + ((thisMin - firstMin) * 60) + (thisSec - firstSec);
+                var thisInt = datetimeThis.getTime() - datetimeFirst.getTime();
 
                 //Integer relative to the first and last dates
                 var relativeInt = thisInt / lastInt;
@@ -246,9 +254,9 @@ $('.dropdown-toggle').dropdown()
             }
 
             //Draw the last date circle
-            $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + 99 + '%; background: ' + color(last.type) + '"><div class="popupSpan">' + last.type + '</div></div>');
+            $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + 100 + '%; background: ' + color(last.type) + '"><div class="popupSpan">' + last.type + '</div></div>');
 
-            $("#mainCont").append('<span id="span' + i + '" class="right">' + last.type + '<br>' + formattedDateLast + '<br>' + xpath(last) +  '</span>');
+            $("#mainCont").append('<span id="span' + i + '" class="right">' + last.type + '<br>' + formattedDateLast + '<br>' + xpath(last) + '</span>');
         }
 
         $(".circle:first").addClass("active");
