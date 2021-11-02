@@ -44,7 +44,7 @@
 </div>
 <script>
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/'
     );
@@ -56,7 +56,7 @@
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
         const chatSocket = new WebSocket(
-            'ws://'
+            'wss://'
             + window.location.host
             + '/ws/'
         );
