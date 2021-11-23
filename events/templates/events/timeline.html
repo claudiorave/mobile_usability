@@ -349,23 +349,50 @@ $('.dropdown-toggle').dropdown()
     console.log()
     chatSocket.onmessage = function (e) {
         json = JSON.parse(e.data).message;
-        $("#line").empty()
-        $("#mainCont").empty()
-        dataJSON.push(json)
-        makeCircles();
+        if (json.type !== "device") {
+            $("#line").empty()
+            $("#mainCont").empty()
+            dataJSON.push(json)
+            makeCircles();
 
-        $(".circle").mouseenter(function () {
-            $(this).addClass("hover");
-        });
+            $(".circle").mouseenter(function () {
+                $(this).addClass("hover");
+            });
 
-        $(".circle").mouseleave(function () {
-            $(this).removeClass("hover");
-        });
+            $(".circle").mouseleave(function () {
+                $(this).removeClass("hover");
+            });
 
-        $(".circle").click(function () {
-            var spanNum = $(this).attr("id");
-            selectDate(spanNum);
-        });
+            $(".circle").click(function () {
+                var spanNum = $(this).attr("id");
+                selectDate(spanNum);
+            });
+        }else {
+
+                var table = document.getElementById("device");
+
+// Create an empty <tr> element and add it to the 1st position of the table:
+            var row = table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+                var cell7 = row.insertCell(6);
+                var cell8 = row.insertCell(7);
+                var cell9 = row.insertCell(8);
+                cell1.innerHTML = json["phone"];
+                cell2.innerHTML = json["mobile"];
+                cell3.innerHTML = json["tablet"];
+                cell4.innerHTML = json["user_agent"];
+                cell5.innerHTML = json["build"];
+                cell6.innerHTML = json["webkit"];
+                cell7.innerHTML = json["os"];
+                cell8.innerHTML = json["height"];
+                cell9.innerHTML = json["width"];
+
+            }
     }
 
 </script>
