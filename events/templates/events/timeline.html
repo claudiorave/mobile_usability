@@ -136,12 +136,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-<script>$(function () {
-    $('[data-toggle="popover"]').popover({html: true})
-})
-$('.dropdown-toggle').dropdown()
 
-</script>
 <script>
     //Sample dates
     let dataJSON;
@@ -173,7 +168,6 @@ $('.dropdown-toggle').dropdown()
           dataJSON.sort(function (a, b) {
         return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     });
-    console.log(dataJSON)
  var length = dataJSON.length
         if (length == 0) {
                         $("#line").hide();
@@ -190,8 +184,7 @@ $('.dropdown-toggle').dropdown()
             $("#line").show();
             $("#span").hide();
              var last = dataJSON[length - 1]
-        console.log(new Date(dataJSON[0].timestamp).getTime())
-        console.log(new Date(last.timestamp).getTime())
+
         let datetimeFirst = new Date(dataJSON[0].timestamp);
         let formattedDateFirst = datetimeFirst.getDate().toString().padStart(2, "0") + "-" + (datetimeFirst.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeFirst.getFullYear().toString().substr(-2) + " " + datetimeFirst.getHours() + ":" + datetimeFirst.getMinutes().toString().padStart(2, "0") + ":" + datetimeFirst.getSeconds().toString().padStart(2, "0")
             var first = formattedDateFirst;
@@ -227,8 +220,21 @@ $('.dropdown-toggle').dropdown()
                 return elemento
             }
 
-            $("#mainCont").append('<span id="span0"  class="center">' + dataJSON[0].type + '<br>' + formattedDateFirst + '<br>' + xpath(dataJSON[0]) + '</span>');
+            $("#mainCont").append('<span id="span0"  class="center">' + dataJSON[0].type + '<br>' + formattedDateFirst + '<br>' + '<div id ="xpath0">'  + xpath(dataJSON[0])+  '</div>' + '</span>');
+                     elementos = "";
 
+                jsonElements = dataJSON[0].elements;
+               if (jsonElements != undefined) {
+                   jsonElements.forEach(e => elementos += e.xpath + "\n");
+               }
+
+            var xPop = document.getElementById("xpath0");
+                xPop.setAttribute("data-container", "body");
+                xPop.setAttribute("data-toggle", "popover");
+                xPop.setAttribute("data-content", elementos);
+                xPop.setAttribute("data-placement", "bottom");
+                xPop.setAttribute("data-trigger", "focus");
+                                xPop.setAttribute("tabindex", "0");
 
             //Loop through middle dates
             for (i = 1; i < length - 1; i++) {
@@ -249,15 +255,57 @@ $('.dropdown-toggle').dropdown()
                 //Draw the date circle
                 let background =
                     $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + relativeInt * 100 + '%; background: ' + color(dataJSON[i].type) + '"><div class="popupSpan">' + dataJSON[i].type + '</div></div>');
+                        let elementos = "";
 
-                $("#mainCont").append('<span id="span' + i + '" class="right">' + dataJSON[i].type + '<br>' + formattedDateThis + '<br>' + xpath(dataJSON[i]) + '</span>');
+                let jsonElements = dataJSON[i].elements;
+               if (jsonElements != undefined) {
+                   jsonElements.forEach(e => elementos += e.xpath + "\n");
+               }
+                $("#mainCont").append('<span id="span' + i + '" class="right" >' + dataJSON[i].type + '<br>' + formattedDateThis + '<br>' + '<div id ="xpath' + i + '">'  + xpath(dataJSON[i])+  '</div>' + '</span>');
+                var xPop = document.getElementById("xpath" + i);
+                xPop.setAttribute("data-container", "body");
+                xPop.setAttribute("data-toggle", "popover");
+                xPop.setAttribute("data-content", elementos);
+                xPop.setAttribute("data-placement", "bottom");
+                xPop.setAttribute("data-trigger", "focus");
+                                xPop.setAttribute("tabindex", "0");
+
+
+
+
+
+
+
             }
 
             //Draw the last date circle
             $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + 100 + '%; background: ' + color(last.type) + '"><div class="popupSpan">' + last.type + '</div></div>');
+elementos = "";
 
-            $("#mainCont").append('<span id="span' + i + '" class="right">' + last.type + '<br>' + formattedDateLast + '<br>' + xpath(last) + '</span>');
+               jsonElements = dataJSON[i].elements;
+               if (jsonElements != undefined) {
+                   jsonElements.forEach(e => elementos += e.xpath + "\n");
+               }
+            $("#mainCont").append('<span id="span' + i + '" class="right">' + last.type + '<br>' + formattedDateLast + '<br>' + '<div id ="xpath' + i + '">'  + xpath(dataJSON[i])+  '</div>' + '</span>');
+
+        var xPop = document.getElementById("xpath" + i);
+                xPop.setAttribute("data-container", "body");
+                xPop.setAttribute("data-toggle", "popover");
+                xPop.setAttribute("data-content", elementos);
+                xPop.setAttribute("data-placement", "bottom");
+                xPop.setAttribute("data-trigger", "focus");
+                                xPop.setAttribute("tabindex", "0");
+
         }
+
+$(function () {
+    $('[data-toggle="popover"]').popover({html: true})
+})
+$('.dropdown-toggle').dropdown()
+
+        $('.popover-dismiss').popover({
+  trigger: 'focus'
+})
 
         $(".circle:first").addClass("active");
     }
@@ -280,6 +328,7 @@ $('.dropdown-toggle').dropdown()
     function selectDate(selector) {
         $selector = "#" + selector;
         $spanSelector = $selector.replace("circle", "span");
+        $xpathSelector = $selector.replace("circle", "xpath");
         var current = $selector.replace("circle", "");
 
         $(".active").removeClass("active");
