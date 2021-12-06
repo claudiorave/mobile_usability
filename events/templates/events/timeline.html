@@ -10,7 +10,7 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 
-    <link rel="stylesheet" type="text/css" href="{% static 'events/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'events/timeline.css' %}">
 
 
 </head>
@@ -304,7 +304,8 @@ $(function () {
 $('.dropdown-toggle').dropdown()
 
         $('.popover-dismiss').popover({
-  trigger: 'focus'
+  trigger: 'focus',
+   container: 'body'
 })
 
         $(".circle:first").addClass("active");

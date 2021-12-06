@@ -30,12 +30,12 @@ button {
 }
 
 table, th, td {
-    table-layout: fixed;
+
     margin-bottom: 2em;
     height: 1em;
 }
 
-tr > td:hover {
+[data-toggle="popover"]:hover {
     overflow: hidden;
     white-space: normal;
     color: #0a58ca;
@@ -45,3 +45,4 @@ tr > td:hover {
     /*display: inline;*/
     /*margin-left: 5em;*/
 }
+
