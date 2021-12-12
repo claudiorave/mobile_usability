@@ -6,6 +6,7 @@ from rest_framework import serializers
 class Event(models.Model):
     type = models.CharField(max_length=50)
     timestamp = models.DateTimeField(null=True, blank=True)
+    session = models.ForeignKey("Session", on_delete=models.CASCADE, related_name="events", null=True, blank=True)
 
     class Meta:
         abstract = False
@@ -37,6 +38,7 @@ class Element(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="elements", null=True, blank=True)
     xpath = models.TextField(null=True, blank=True)
 
+
 class Device(models.Model):
     phone = models.CharField(max_length=100, null=True)
     mobile = models.CharField(max_length=100, null=True)
@@ -48,11 +50,12 @@ class Device(models.Model):
     width = models.FloatField(null=True)
     webkit = models.FloatField(null=True)
     type = models.CharField(max_length=50)
+    session = models.OneToOneField("Session", on_delete=models.CASCADE, related_name="device", null=True, blank=True)
 
 
-
-
-
+class Session(models.Model):
+    token = models.CharField(max_length=100, unique=True, primary_key= True)
+    active = models.BooleanField(default=True)
 
 
 
