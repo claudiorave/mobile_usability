@@ -13,10 +13,10 @@ router.register(r'scroll', ScrollViewSet, basename='scroll')
 router.register(r'event', EventViewSet, basename='event')
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('eventos/<str:session>/', index, name='index'),
     path('reset/<str:path>/', reset, name='index'),
-    path('unificada', unificada, name='unificada'),
-    path('timeline', timeline, name='timeline'),
+    path('unificada/<str:session>/', unificada, name='unificada'),
+    path('timeline/<str:session>/', timeline, name='timeline'),
 ]
 
 urlpatterns += router.urls

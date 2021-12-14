@@ -12,7 +12,28 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'events/style.css' %}">
 
-
+<script>
+    var path = window.location.pathname
+    var array = path.split("/")
+    const session = array[2]
+    const chatSocket = new WebSocket(
+        'wss://'
+        + window.location.host
+        + '/ws/'
+        + session
+        + '/'
+    );
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+        const chatSocket = new WebSocket(
+            'wss://'
+            + window.location.host
+            + '/ws/'
+            + session
+            + '/'
+        );
+    };
+</script>
 </head>
 <body>
 <header class="h1">Mobile Logger</header>
@@ -35,28 +56,14 @@
                 Vistas
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="/">Por evento</a></li>
-                <li><a class="dropdown-item" href="/unificada">Unificada</a></li>
-                <li><a class="dropdown-item" href="/timeline">Timeline</a></li>
+                <li><a class="dropdown-item" href="/eventos/{{ session }}/">Por evento</a></li>
+                <li><a class="dropdown-item" href="/unificada/{{ session }}/">Unificada</a></li>
+                <li><a class="dropdown-item" href="/timeline/{{ session }}/">Timeline</a></li>
             </ul>
         </div>
     </div>
 </div>
-<script>
-    const chatSocket = new WebSocket(
-        'ws://'
-        + window.location.host
-        + '/ws/'
-    );
-    chatSocket.onclose = function (e) {
-        console.error('Chat socket closed unexpectedly');
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/'
-        );
-    };
-</script>
+
 <div id="content">
     {% block content %}{% endblock %}
 </div>

@@ -55,54 +55,56 @@ class EventViewSet(ModelViewSet):
             return DeviceSerializer
 
 
-def index(request):
-    misclicks_list = MisClicks.objects.order_by('-timestamp')[:25]
+def index(request, session):
+    print(session)
+    misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')[:25]
     print(misclicks_list)
-    pinchzoom_list = PinchZoom.objects.order_by('-timestamp')[:25]
+    pinchzoom_list = PinchZoom.objects.filter(session=session).order_by('-timestamp')[:25]
     scroll_list = Scroll.objects.order_by('-timestamp')[:25]
-    orientation_change_list = Event.objects.filter(type="orientationchange").order_by('-timestamp')[:25]
-    device = Device.objects.last()
+    orientation_change_list = Event.objects.filter(type="orientationchange", session= session).order_by('-timestamp')[:25]
+    device = Device.objects.filter(session=session).last()
     template = loader.get_template('events/index.html')
     context = {
         'misclicks_list': misclicks_list,
         'pinchzoom_list': pinchzoom_list,
         'scroll_list': scroll_list,
         'orientation_change_list': orientation_change_list,
-        'device': device
+        'device': device,
+         'session': session,
     }
     return HttpResponse(template.render(context, request))
 
 
-def unificada(request):
-    misclicks_list = MisClicks.objects.order_by('-timestamp')[:25]
-    pinchzoom_list = PinchZoom.objects.order_by('-timestamp')[:25]
-    scroll_list = Scroll.objects.order_by('-timestamp')[:25]
-    orientation_change_list = Event.objects.filter(type="orientationchange").order_by('-timestamp')[:25]
-    device = Device.objects.last()
+def unificada(request, session):
+    misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')[:25]
+    pinchzoom_list = PinchZoom.objects.filter(session=session).order_by('-timestamp')[:25]
+    scroll_list = Scroll.objects.filter(session=session).order_by('-timestamp')[:25]
+    orientation_change_list = Event.objects.filter(type="orientationchange", session= session).order_by('-timestamp')[:25]
+    device = Device.objects.filter(session=session).last()
     template = loader.get_template('events/unificada.html')
     eventos_list = list(chain(misclicks_list, pinchzoom_list, scroll_list, orientation_change_list))
     context = {
         'eventos_list': eventos_list,
-        'device': device
-
+        'device': device,
+        'session': session,
     }
     return HttpResponse(template.render(context, request))
 
 
-def timeline(request):
-    misclicks_list = MisClicks.objects.order_by('-timestamp')[:25]
+def timeline(request, session):
+    misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')[:25]
     serializer = MisClicksSerializer(misclicks_list, many=True)
     misclicks_data = serializer.data
-    pinchzoom_list = PinchZoom.objects.order_by('-timestamp')[:25]
+    pinchzoom_list = PinchZoom.objects.filter(session=session).order_by('-timestamp')[:25]
     serializer = PinchZoomSerializer(pinchzoom_list, many=True)
     pinchzoom_data = serializer.data
-    scroll_list = Scroll.objects.order_by('-timestamp')[:25]
+    scroll_list = Scroll.objects.filter(session=session).order_by('-timestamp')[:25]
     serializer = ScrollSerializer(scroll_list, many=True)
     scroll_data = serializer.data
-    orientation_change_list = Event.objects.filter(type="orientationchange").order_by('-timestamp')[:25]
+    orientation_change_list = Event.objects.filter(type="orientationchange", session= session).order_by('-timestamp')[:25]
     serializer = OrientationChangeSerializer(orientation_change_list, many=True)
     orientation_change_data = serializer.data
-    device = Device.objects.last()
+    device = Device.objects.filter(session=session).last()
     template = loader.get_template('events/timeline.html')
     eventos_list = list(chain(misclicks_list, pinchzoom_list, scroll_list, orientation_change_list))
     data_list = list(chain(misclicks_data, pinchzoom_data, scroll_data, orientation_change_data))
@@ -113,7 +115,8 @@ def timeline(request):
         'eventos_list': eventos_list,
         'device': device,
         'dataJSON': dumps(data_list),
-        'data_list': dumps(data_list)
+        'data_list': dumps(data_list),
+        'session': session,
 
 
 

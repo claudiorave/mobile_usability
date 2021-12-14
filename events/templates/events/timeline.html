@@ -35,18 +35,23 @@
                 Vistas
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="/">Por evento</a></li>
-                <li><a class="dropdown-item" href="/unificada">Unificada</a></li>
-                <li><a class="dropdown-item" href="/timeline">Timeline</a></li>
+                <li><a class="dropdown-item" href="/eventos/{{ session }}/">Por evento</a></li>
+                <li><a class="dropdown-item" href="/unificada/{{ session }}/">Unificada</a></li>
+                <li><a class="dropdown-item" href="/timeline/{{ session }}/">Timeline</a></li>
             </ul>
         </div>
     </div>
 </div>
 <script>
+    var path = window.location.pathname
+    var array = path.split("/")
+    const session = array[2]
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/'
+        + session
+        + '/'
     );
     chatSocket.onmessage = function (e) {
         json = JSON.parse(e.data).message;
@@ -59,6 +64,8 @@
             'ws://'
             + window.location.host
             + '/ws/'
+            + session
+            + '/'
         );
     };
 </script>
@@ -165,17 +172,16 @@
     //Main function. Draw your circles.
     function makeCircles() {
         //Forget the timeline if there's only one date. Who needs it!?
-          dataJSON.sort(function (a, b) {
-        return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-    });
- var length = dataJSON.length
+        dataJSON.sort(function (a, b) {
+            return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        });
+        var length = dataJSON.length
         if (length == 0) {
-                        $("#line").hide();
+            $("#line").hide();
 
             $("#mainCont").show().text("No se registran eventos");
 
-        }
-        else if (length < 2) {
+        } else if (length < 2) {
             $("#line").hide();
             $("#mainCont").show().text(dataJSON[0].type);
             //This is what you really want.
@@ -183,10 +189,10 @@
             //Set day, month and year variables for the math
             $("#line").show();
             $("#span").hide();
-             var last = dataJSON[length - 1]
+            var last = dataJSON[length - 1]
 
-        let datetimeFirst = new Date(dataJSON[0].timestamp);
-        let formattedDateFirst = datetimeFirst.getDate().toString().padStart(2, "0") + "-" + (datetimeFirst.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeFirst.getFullYear().toString().substr(-2) + " " + datetimeFirst.getHours() + ":" + datetimeFirst.getMinutes().toString().padStart(2, "0") + ":" + datetimeFirst.getSeconds().toString().padStart(2, "0")
+            let datetimeFirst = new Date(dataJSON[0].timestamp);
+            let formattedDateFirst = datetimeFirst.getDate().toString().padStart(2, "0") + "-" + (datetimeFirst.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeFirst.getFullYear().toString().substr(-2) + " " + datetimeFirst.getHours() + ":" + datetimeFirst.getMinutes().toString().padStart(2, "0") + ":" + datetimeFirst.getSeconds().toString().padStart(2, "0")
             var first = formattedDateFirst;
             let datetimeLast = new Date(last.timestamp);
             let formattedDateLast = datetimeLast.getDate().toString().padStart(2, "0") + "-" + (datetimeLast.getMonth() + 1).toString().padStart(2, "0") + "-" + datetimeLast.getFullYear().toString().substr(-2) + " " + datetimeLast.getHours() + ":" + datetimeLast.getMinutes().toString().padStart(2, "0") + ":" + datetimeLast.getSeconds().toString().padStart(2, "0")
@@ -220,21 +226,21 @@
                 return elemento
             }
 
-            $("#mainCont").append('<span id="span0"  class="center">' + dataJSON[0].type + '<br>' + formattedDateFirst + '<br>' + '<div id ="xpath0">'  + xpath(dataJSON[0])+  '</div>' + '</span>');
-                     elementos = "";
+            $("#mainCont").append('<span id="span0"  class="center">' + dataJSON[0].type + '<br>' + formattedDateFirst + '<br>' + '<div id ="xpath0">' + xpath(dataJSON[0]) + '</div>' + '</span>');
+            elementos = "";
 
-                jsonElements = dataJSON[0].elements;
-               if (jsonElements != undefined) {
-                   jsonElements.forEach(e => elementos += e.xpath + "\n");
-               }
+            jsonElements = dataJSON[0].elements;
+            if (jsonElements != undefined) {
+                jsonElements.forEach(e => elementos += e.xpath + "\n");
+            }
 
             var xPop = document.getElementById("xpath0");
-                xPop.setAttribute("data-container", "body");
-                xPop.setAttribute("data-toggle", "popover");
-                xPop.setAttribute("data-content", elementos);
-                xPop.setAttribute("data-placement", "bottom");
-                xPop.setAttribute("data-trigger", "focus");
-                                xPop.setAttribute("tabindex", "0");
+            xPop.setAttribute("data-container", "body");
+            xPop.setAttribute("data-toggle", "popover");
+            xPop.setAttribute("data-content", elementos);
+            xPop.setAttribute("data-placement", "bottom");
+            xPop.setAttribute("data-trigger", "focus");
+            xPop.setAttribute("tabindex", "0");
 
             //Loop through middle dates
             for (i = 1; i < length - 1; i++) {
@@ -255,58 +261,53 @@
                 //Draw the date circle
                 let background =
                     $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + relativeInt * 100 + '%; background: ' + color(dataJSON[i].type) + '"><div class="popupSpan">' + dataJSON[i].type + '</div></div>');
-                        let elementos = "";
+                let elementos = "";
 
                 let jsonElements = dataJSON[i].elements;
-               if (jsonElements != undefined) {
-                   jsonElements.forEach(e => elementos += e.xpath + "\n");
-               }
-                $("#mainCont").append('<span id="span' + i + '" class="right" >' + dataJSON[i].type + '<br>' + formattedDateThis + '<br>' + '<div id ="xpath' + i + '">'  + xpath(dataJSON[i])+  '</div>' + '</span>');
+                if (jsonElements != undefined) {
+                    jsonElements.forEach(e => elementos += e.xpath + "\n");
+                }
+                $("#mainCont").append('<span id="span' + i + '" class="right" >' + dataJSON[i].type + '<br>' + formattedDateThis + '<br>' + '<div id ="xpath' + i + '">' + xpath(dataJSON[i]) + '</div>' + '</span>');
                 var xPop = document.getElementById("xpath" + i);
                 xPop.setAttribute("data-container", "body");
                 xPop.setAttribute("data-toggle", "popover");
                 xPop.setAttribute("data-content", elementos);
                 xPop.setAttribute("data-placement", "bottom");
                 xPop.setAttribute("data-trigger", "focus");
-                                xPop.setAttribute("tabindex", "0");
-
-
-
-
-
+                xPop.setAttribute("tabindex", "0");
 
 
             }
 
             //Draw the last date circle
             $("#line").append('<div class="circle" id="circle' + i + '" style="left: ' + 100 + '%; background: ' + color(last.type) + '"><div class="popupSpan">' + last.type + '</div></div>');
-elementos = "";
+            elementos = "";
 
-               jsonElements = dataJSON[i].elements;
-               if (jsonElements != undefined) {
-                   jsonElements.forEach(e => elementos += e.xpath + "\n");
-               }
-            $("#mainCont").append('<span id="span' + i + '" class="right">' + last.type + '<br>' + formattedDateLast + '<br>' + '<div id ="xpath' + i + '">'  + xpath(dataJSON[i])+  '</div>' + '</span>');
+            jsonElements = dataJSON[i].elements;
+            if (jsonElements != undefined) {
+                jsonElements.forEach(e => elementos += e.xpath + "\n");
+            }
+            $("#mainCont").append('<span id="span' + i + '" class="right">' + last.type + '<br>' + formattedDateLast + '<br>' + '<div id ="xpath' + i + '">' + xpath(dataJSON[i]) + '</div>' + '</span>');
 
-        var xPop = document.getElementById("xpath" + i);
-                xPop.setAttribute("data-container", "body");
-                xPop.setAttribute("data-toggle", "popover");
-                xPop.setAttribute("data-content", elementos);
-                xPop.setAttribute("data-placement", "bottom");
-                xPop.setAttribute("data-trigger", "focus");
-                                xPop.setAttribute("tabindex", "0");
+            var xPop = document.getElementById("xpath" + i);
+            xPop.setAttribute("data-container", "body");
+            xPop.setAttribute("data-toggle", "popover");
+            xPop.setAttribute("data-content", elementos);
+            xPop.setAttribute("data-placement", "bottom");
+            xPop.setAttribute("data-trigger", "focus");
+            xPop.setAttribute("tabindex", "0");
 
         }
 
-$(function () {
-    $('[data-toggle="popover"]').popover({html: true})
-})
-$('.dropdown-toggle').dropdown()
+        $(function () {
+            $('[data-toggle="popover"]').popover({html: true})
+        })
+        $('.dropdown-toggle').dropdown()
 
         $('.popover-dismiss').popover({
-  trigger: 'focus',
-   container: 'body'
-})
+            trigger: 'focus',
+            container: 'body'
+        })
 
         $(".circle:first").addClass("active");
     }
@@ -368,32 +369,32 @@ $('.dropdown-toggle').dropdown()
                 var spanNum = $(this).attr("id");
                 selectDate(spanNum);
             });
-        }else {
+        } else {
 
-                var table = document.getElementById("device");
+            var table = document.getElementById("device");
 
 // Create an empty <tr> element and add it to the 1st position of the table:
             var row = table.insertRow(-1);
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-                var cell4 = row.insertCell(3);
-                var cell5 = row.insertCell(4);
-                var cell6 = row.insertCell(5);
-                var cell7 = row.insertCell(6);
-                var cell8 = row.insertCell(7);
-                var cell9 = row.insertCell(8);
-                cell1.innerHTML = json["phone"];
-                cell2.innerHTML = json["mobile"];
-                cell3.innerHTML = json["tablet"];
-                cell4.innerHTML = json["user_agent"];
-                cell5.innerHTML = json["build"];
-                cell6.innerHTML = json["webkit"];
-                cell7.innerHTML = json["os"];
-                cell8.innerHTML = json["height"];
-                cell9.innerHTML = json["width"];
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+            var cell8 = row.insertCell(7);
+            var cell9 = row.insertCell(8);
+            cell1.innerHTML = json["phone"];
+            cell2.innerHTML = json["mobile"];
+            cell3.innerHTML = json["tablet"];
+            cell4.innerHTML = json["user_agent"];
+            cell5.innerHTML = json["build"];
+            cell6.innerHTML = json["webkit"];
+            cell7.innerHTML = json["os"];
+            cell8.innerHTML = json["height"];
+            cell9.innerHTML = json["width"];
 
-            }
+        }
     }
 
 </script>

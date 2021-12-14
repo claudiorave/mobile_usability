@@ -13,8 +13,7 @@ from rest_framework.renderers import JSONRenderer
 @receiver(event_created)
 def my_callback(sender, instance, **kwargs):
     channel_layer = channels.layers.get_channel_layer()
-    group_name = 'chat'
-    print(instance.type)
+    group_name = instance.session.token
     if instance.type == 'misclick':
         serializer = MisClicksSerializer(instance)
     elif instance.type == "pinchzoom":
