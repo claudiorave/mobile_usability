@@ -136,7 +136,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
+X_FRAME_OPTIONS = 'ALLOW-FROM *'
 # Django Logging Information
 LOGGING = {
     # Define the logging version

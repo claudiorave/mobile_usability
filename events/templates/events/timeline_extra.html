@@ -14,45 +14,6 @@
 
 
 </head>
-<body>
-<header class="h1"><a href="/" style="text-decoration: none; color: #0f0f0f">Mobile Logger</a></header>
-<div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
-    {% if request.path != "/" %}
-        <a class="btn btn-primary" href="/reset/{{ session }}/">
-            RESET
-        </a>
-    {% else %}
-        <a class="btn btn-primary" href="/reset/index/">
-            RESET
-        </a>
-    {% endif %}
-
-    <div class="btn-group" role="group">
-
-        <div class="dropdown" id="drop">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                Vistas
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="/eventos/{{ session }}/">Por evento</a></li>
-                <li><a class="dropdown-item" href="/unificada/{{ session }}/">Unificada</a></li>
-                <li><a class="dropdown-item" href="/timeline/{{ session }}/">Timeline</a></li>
-            </ul>
-        </div>
-        <div class="dropdown">
-            <button onclick="myFunction()" class="btn btn-secondary dropdown-toggle">Comparar</button>
-            <div id="myDropdown" class="dropdown-content">
-                <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                {% for session in session_list %}
-                    <a onclick="insertExtra({{ session_token }}) ">{{ session.token }}</a>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-</div>
-</div>
 <script>
     var path = window.location.pathname
     var array = path.split("/")
@@ -72,7 +33,7 @@
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
         const chatSocket = new WebSocket(
-            'wss://'
+            'ws://'
             + window.location.host
             + '/ws/'
             + session
@@ -80,8 +41,6 @@
         );
     };
 </script>
-
-
 <section id="timeline">
     <div id="lineCont">
         <div id="line"></div>
@@ -90,62 +49,6 @@
     <div id="mainCont">
     </div>
 
-</section>
-
-<iframe id="iframe" name="myIframe" frameborder="0" width="500" height="300" allowfullscreen></iframe>
-
-<section>
-    <h2 class="display-6">Device</h2>
-    <table class="table-bordered" id="device">
-        <th>
-            phone
-        </th>
-        <th>
-            mobile
-        </th>
-        <th>
-            tablet
-        </th>
-        <th>
-            user_agent
-        </th>
-        <th>
-            build
-        </th>
-        <th>
-            webkit
-        </th>
-        <th>
-            os
-        </th>
-        <th>
-            height
-        </th>
-        <th>
-            width
-        </th>
-        {% if device != None %}
-
-            <tr>
-                <td>{{ device.phone }}</td>
-                <td>{{ device.mobile }}</td>
-                <td>{{ device.tablet }}</td>
-                <td>{{ device.user_agent }}</td>
-
-                <td>{{ device.build }}</td>
-
-                <td>{{ device.webkit }}</td>
-
-                <td>{{ device.os }}</td>
-
-                <td>{{ device.height }}</td>
-
-                <td>{{ device.width }}</td>
-
-
-            </tr>
-        {% endif %}
-    </table>
 </section>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -156,7 +59,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-
 <script>
     //Sample dates
     let dataJSON;
@@ -431,11 +333,6 @@
             }
         }
     }
-    function insertExtra(session){
-$('#iframe').attr('src', 'http://127.0.0.1:8000/timeline_extra/' + session +'/');
-    }
-
-
 </script>
 </body>
 </html>

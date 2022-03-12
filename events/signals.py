@@ -14,6 +14,7 @@ from rest_framework.renderers import JSONRenderer
 def my_callback(sender, instance, **kwargs):
     channel_layer = channels.layers.get_channel_layer()
     group_name = instance.session.token
+    print(instance)
     if instance.type == 'misclick':
         serializer = MisClicksSerializer(instance)
     elif instance.type == "pinchzoom":

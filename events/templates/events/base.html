@@ -36,10 +36,10 @@
 </script>
 </head>
 <body>
-<header class="h1">Mobile Logger</header>
+<header class="h1"><a href="/" style="text-decoration: none; color: #0f0f0f">Mobile Logger</a></header>
 <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
     {% if request.path != "/" %}
-        <a class="btn btn-primary" href="/reset{{ request.path }}/">
+        <a class="btn btn-primary" href="/reset/{{ session }}/">
             RESET
         </a>
     {% else %}
