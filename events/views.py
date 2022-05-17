@@ -56,7 +56,7 @@ class EventViewSet(ModelViewSet):
             return DeviceSerializer
 
 def home(request):
-    session = Session.objects.all()[:25]
+    session = Session.objects.all()
     context = {
         'session_list':session
     }
@@ -101,7 +101,7 @@ def unificada(request, session):
 
 
 def timeline(request, session):
-    session_list = Session.objects.all()[:25]
+    session_list = Session.objects.all()
     misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')[:25]
     serializer = MisClicksSerializer(misclicks_list, many=True)
     misclicks_data = serializer.data
@@ -135,7 +135,7 @@ def timeline(request, session):
     return HttpResponse(template.render(context, request))
 
 def timeline_extra(request, session):
-    session_list = Session.objects.all()[:25]
+    session_list = Session.objects.all()
     misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')[:25]
     serializer = MisClicksSerializer(misclicks_list, many=True)
     misclicks_data = serializer.data
