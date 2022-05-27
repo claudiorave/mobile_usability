@@ -62,6 +62,28 @@ class MisClicksSerializer(serializers.ModelSerializer):
         model = MisClicks
         fields = ['type', 'x', 'y', 'elements', 'timestamp', 'session']
 
+class ClickSerializer(serializers.ModelSerializer):
+    elements = ElementSerializer(many=True)
+    session = serializers.CharField(max_length=200)
+
+    def create(self, validated_data):
+        session_token = validated_data.pop('session')
+        if Session.objects.filter(token=session_token).count() == 0:
+            session = Session.objects.create(token=session_token)
+        else:
+            session = Session.objects.get(token=session_token)
+        elements_data = validated_data.pop('elements')
+        event = Click.objects.create(**validated_data, session=session)
+        for element_data in elements_data:
+            Element.objects.create(event=event, **element_data)
+
+        event_created.send(sender=self.__class__, instance=event)
+
+        return event
+
+    class Meta:
+        model = Click
+        fields = ['type', 'x', 'y', 'elements', 'timestamp', 'session']
 
 class PinchZoomSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True)

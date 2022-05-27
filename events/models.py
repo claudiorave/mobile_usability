@@ -25,6 +25,9 @@ class MisClicks(Event):
     x = models.FloatField()
     y = models.FloatField()
 
+class Click(Event):
+    x = models.FloatField(null=True, blank=True)
+    y = models.FloatField(null=True, blank=True)
 
 class PinchZoom(Event):
     percentage = models.FloatField(null=True, blank=True)
@@ -56,6 +59,17 @@ class Device(models.Model):
 class Session(models.Model):
     token = models.CharField(max_length=100, unique=True, primary_key= True)
     active = models.BooleanField(default=True)
+
+class Sitio(models.Model):
+    nombre = models.CharField(max_length=100, unique=True, primary_key=True)
+    corregido = models.BooleanField()
+    publications = models.ManyToManyField(Session)
+
+class Tarea(models.Model):
+    numero = models.CharField(max_length=10)
+    descripcion = models.TextField(null=True, blank=True)
+    sitio = models.ForeignKey(Sitio, on_delete=models.CASCADE, related_name="elements", null=True, blank=True)
+
 
 
 

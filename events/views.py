@@ -42,6 +42,8 @@ class EventViewSet(ModelViewSet):
             return Event.objects.filter(type='orientationchange')
         elif self.request.data["type"] == 'device':
             return Device.objects.all()
+        elif self.request.data["type"] == 'click':
+            return Click.objects.all()
 
     def get_serializer_class(self):
         if self.request.data["type"] == 'misclick':
@@ -54,6 +56,8 @@ class EventViewSet(ModelViewSet):
             return OrientationChangeSerializer
         elif self.request.data["type"] == 'device':
             return DeviceSerializer
+        elif self.request.data["type"] == 'click':
+            return ClickSerializer
 
 def home(request):
     session = Session.objects.all()
@@ -65,15 +69,15 @@ def home(request):
 
 
 def index(request, session):
-    print(session)
     misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')[:25]
-    print(misclicks_list)
+    click_list = Click.objects.filter(session=session).order_by('-timestamp')[:25]
     pinchzoom_list = PinchZoom.objects.filter(session=session).order_by('-timestamp')[:25]
     scroll_list = Scroll.objects.filter(session=session).order_by('-timestamp')[:25]
     orientation_change_list = Event.objects.filter(type="orientationchange", session= session).order_by('-timestamp')[:25]
     device = Device.objects.filter(session=session).last()
     template = loader.get_template('events/index.html')
     context = {
+        'click_list': click_list,
         'misclicks_list': misclicks_list,
         'pinchzoom_list': pinchzoom_list,
         'scroll_list': scroll_list,
@@ -86,12 +90,13 @@ def index(request, session):
 
 def unificada(request, session):
     misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')[:25]
+    click_list = Click.objects.filter(session=session).order_by('-timestamp')[:25]
     pinchzoom_list = PinchZoom.objects.filter(session=session).order_by('-timestamp')[:25]
     scroll_list = Scroll.objects.filter(session=session).order_by('-timestamp')[:25]
     orientation_change_list = Event.objects.filter(type="orientationchange", session= session).order_by('-timestamp')[:25]
     device = Device.objects.filter(session=session).last()
     template = loader.get_template('events/unificada.html')
-    eventos_list = list(chain(misclicks_list, pinchzoom_list, scroll_list, orientation_change_list))
+    eventos_list = list(chain(misclicks_list, pinchzoom_list, scroll_list, orientation_change_list, click_list))
     context = {
         'eventos_list': eventos_list,
         'device': device,
@@ -105,6 +110,9 @@ def timeline(request, session):
     misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')[:25]
     serializer = MisClicksSerializer(misclicks_list, many=True)
     misclicks_data = serializer.data
+    clicks_list = Click.objects.filter(session=session).order_by('-timestamp')[:25]
+    serializer = ClickSerializer(clicks_list, many=True)
+    clicks_data = serializer.data
     pinchzoom_list = PinchZoom.objects.filter(session=session).order_by('-timestamp')[:25]
     serializer = PinchZoomSerializer(pinchzoom_list, many=True)
     pinchzoom_data = serializer.data
@@ -117,7 +125,7 @@ def timeline(request, session):
     device = Device.objects.filter(session=session).last()
     template = loader.get_template('events/timeline.html')
     eventos_list = list(chain(misclicks_list, pinchzoom_list, scroll_list, orientation_change_list))
-    data_list = list(chain(misclicks_data, pinchzoom_data, scroll_data, orientation_change_data))
+    data_list = list(chain(clicks_data, misclicks_data, pinchzoom_data, scroll_data, orientation_change_data))
     sorted(data_list, key=lambda i: (i['timestamp']))
     eventos = Event.objects.order_by('-timestamp')[:25]
     serializer = EventSerializer(eventos, many=True)

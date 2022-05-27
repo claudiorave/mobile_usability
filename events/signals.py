@@ -6,7 +6,7 @@ import channels.layers
 from asgiref.sync import async_to_sync
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .serializers import MisClicksSerializer, ScrollSerializer, PinchZoomSerializer, event_created, OrientationChangeSerializer, DeviceSerializer
+from .serializers import *
 from rest_framework.renderers import JSONRenderer
 
 
@@ -25,6 +25,8 @@ def my_callback(sender, instance, **kwargs):
         serializer = OrientationChangeSerializer(instance)
     elif instance.type == "device":
         serializer = DeviceSerializer(instance)
+    elif instance.type == "click":
+        serializer = ClickSerializer(instance)
 
     async_to_sync(channel_layer.group_send)(
         group_name,

@@ -70,7 +70,6 @@
                 cell1.innerHTML = formatted_date;
 
             } else if (json.type === "device") {
-                console.log(table)
                 var cell1 = row.insertCell(0);
                 var cell2 = row.insertCell(1);
                 var cell3 = row.insertCell(2);
@@ -90,7 +89,31 @@
                 cell8.innerHTML = json["height"];
                 cell9.innerHTML = json["width"];
 
+            }else if (json.type === "click") {
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+
+// Add some text to the new cells:
+                cell1.innerHTML = json.x;
+                cell2.innerHTML = json.y;
+                let datetime = new Date(json.timestamp);
+                let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
+                let elementos = "";
+                json.elements.forEach(e=> elementos += e.xpath + "\n");
+                cell3.innerHTML = formatted_date;
+                 cell4.setAttribute("data-container", "body")
+                cell4.setAttribute("data-toggle", "popover")
+                cell4.setAttribute("data-content", elementos )
+                cell4.setAttribute("data-placement", "left")
+               cell4.innerHTML = json.elements[0].xpath
+                $(function () {
+  $('[data-toggle="popover"]').popover({html: true})
+})
+
             }
+
 
         };
 
@@ -105,6 +128,39 @@
             );
         };
     </script>
+        <section>
+        <h2 class="display-6">Clicks</h2>
+        <table class="table-bordered" id="click">
+            <th>
+                x
+            </th>
+            <th>
+                y
+            </th>
+            <th>
+                timestamp
+            </th>
+            <th>
+                elements
+            </th>
+            <tbody>
+            {% for click in click_list %}
+                <tr>
+                    <td>{{ click.x }}</td>
+                    <td>{{ click.y }}</td>
+                    <td>{{ click.timestamp }}</td>
+                    <td data-container="body" data-toggle="popover"
+                        data-placement="left" data-content="{% for element in  click.elements.all %}
+                        {{ element.xpath }}<br>
+                    {% endfor %}">
+                        {{ click.elements.first.xpath }}
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
     <section>
         <h2 class="display-6">MisClicks</h2>
         <table class="table-bordered" id="misclick">
