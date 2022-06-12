@@ -27,7 +27,7 @@ class ScrollViewSet(ModelViewSet):
 
 class SessionViewSet(ModelViewSet):
     queryset = Session.objects.all()
-    serializer_class = ScrollSerializer
+    serializer_class = SessionSerializer
 
 class EventViewSet(ModelViewSet):
     def get_queryset(self):

@@ -1,6 +1,7 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
 from .models import *
 import django.dispatch
+from rest_framework.response import Response
 
 event_created = django.dispatch.Signal()
 
@@ -30,9 +31,11 @@ class OrientationChangeSerializer(serializers.ModelSerializer):
             session = Session.objects.create(token=session_token)
         else:
             session = Session.objects.get(token=session_token)
-        event = Event.objects.create(**validated_data, session=session)
-        event_created.send(sender=self.__class__, instance=event)
-        return event
+        if session.active:
+            event = Event.objects.create(**validated_data, session=session)
+            event_created.send(sender=self.__class__, instance=event)
+            return event
+        raise serializers.ValidationError("La sesión ha sido desactivada")
 
     class Meta:
         model = Event
@@ -49,14 +52,17 @@ class MisClicksSerializer(serializers.ModelSerializer):
             session = Session.objects.create(token=session_token)
         else:
             session = Session.objects.get(token=session_token)
-        elements_data = validated_data.pop('elements')
-        event = MisClicks.objects.create(**validated_data, session=session)
-        for element_data in elements_data:
-            Element.objects.create(event=event, **element_data)
+        if session.active:
+            elements_data = validated_data.pop('elements')
+            event = MisClicks.objects.create(**validated_data, session=session)
+            for element_data in elements_data:
+                Element.objects.create(event=event, **element_data)
 
-        event_created.send(sender=self.__class__, instance=event)
+            event_created.send(sender=self.__class__, instance=event)
 
-        return event
+            return event
+        raise serializers.ValidationError("La sesión ha sido desactivada")
+
 
     class Meta:
         model = MisClicks
@@ -72,14 +78,16 @@ class ClickSerializer(serializers.ModelSerializer):
             session = Session.objects.create(token=session_token)
         else:
             session = Session.objects.get(token=session_token)
-        elements_data = validated_data.pop('elements')
-        event = Click.objects.create(**validated_data, session=session)
-        for element_data in elements_data:
-            Element.objects.create(event=event, **element_data)
+        if session.active:
+            elements_data = validated_data.pop('elements')
+            event = Click.objects.create(**validated_data, session=session)
+            for element_data in elements_data:
+                Element.objects.create(event=event, **element_data)
 
-        event_created.send(sender=self.__class__, instance=event)
+            event_created.send(sender=self.__class__, instance=event)
 
-        return event
+            return event
+        raise serializers.ValidationError("La sesión ha sido desactivada")
 
     class Meta:
         model = Click
@@ -95,12 +103,15 @@ class PinchZoomSerializer(serializers.ModelSerializer):
             session = Session.objects.create(token=session_token)
         else:
             session = Session.objects.get(token=session_token)
-        elements_data = validated_data.pop('elements')
-        event = PinchZoom.objects.create(**validated_data, session=session)
-        for element_data in elements_data:
-            Element.objects.create(event=event, **element_data)
-        event_created.send(sender=self.__class__, instance=event)
-        return event
+        if session.active:
+            elements_data = validated_data.pop('elements')
+            event = PinchZoom.objects.create(**validated_data, session=session)
+            for element_data in elements_data:
+                Element.objects.create(event=event, **element_data)
+            event_created.send(sender=self.__class__, instance=event)
+            return event
+        raise serializers.ValidationError("La sesión ha sido desactivada")
+
 
     class Meta:
         model = PinchZoom
@@ -117,12 +128,14 @@ class ScrollSerializer(serializers.ModelSerializer):
             session = Session.objects.create(token=session_token)
         else:
             session = Session.objects.get(token=session_token)
-        elements_data = validated_data.pop('elements')
-        event = Scroll.objects.create(**validated_data, session=session)
-        for element_data in elements_data:
-            Element.objects.create(event=event, **element_data)
-        event_created.send(sender=self.__class__, instance=event)
-        return event
+        if session.active:
+            elements_data = validated_data.pop('elements')
+            event = Scroll.objects.create(**validated_data, session=session)
+            for element_data in elements_data:
+                Element.objects.create(event=event, **element_data)
+            event_created.send(sender=self.__class__, instance=event)
+            return event
+        raise serializers.ValidationError("La sesión ha sido desactivada")
 
     class Meta:
         model = Scroll
@@ -138,9 +151,11 @@ class DeviceSerializer(serializers.ModelSerializer):
             session = Session.objects.create(token=session_token)
         else:
             session = Session.objects.get(token=session_token)
-        device = Device.objects.create(**validated_data, session=session)
-        event_created.send(sender=self.__class__, instance=device)
-        return device
+        if session.active:
+            device = Device.objects.create(**validated_data, session=session)
+            event_created.send(sender=self.__class__, instance=device)
+            return device
+        raise serializers.ValidationError("La sesión ha sido desactivada")
 
     class Meta:
         model = Device
