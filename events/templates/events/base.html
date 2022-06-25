@@ -6,34 +6,31 @@
 <head>
     <meta charset="utf-8">
     <title>Mobile Logger</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-
-
+    <link rel="stylesheet" href="{% static 'boot/css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'events/style.css' %}">
 
-<script>
-    var path = window.location.pathname
-    var array = path.split("/")
-    const session = array[2]
-    const chatSocket = new WebSocket(
-        'ws://'
-        + window.location.host
-        + '/ws/'
-        + session
-        + '/'
-    );
-    chatSocket.onclose = function (e) {
-        console.error('Chat socket closed unexpectedly');
+    <script>
+        var path = window.location.pathname
+        var array = path.split("/")
+        const session = array[2]
         const chatSocket = new WebSocket(
-            'ws://'
+            'wss://'
             + window.location.host
             + '/ws/'
             + session
             + '/'
         );
-    };
-</script>
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+            const chatSocket = new WebSocket(
+                'wss://'
+                + window.location.host
+                + '/ws/'
+                + session
+                + '/'
+            );
+        };
+    </script>
 </head>
 <body>
 <header class="h1"><a href="/" style="text-decoration: none; color: #0f0f0f">Mobile Logger</a></header>
@@ -120,18 +117,18 @@
         {% endif %}
     </table>
 </section>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="{% static 'boot/js/jquery-3.2.1.slim.min.js' %}"></script>
+<script src="{% static 'boot/js/popper.min.js' %}"></script>
+<script src="{% static 'boot/js/bootstrap.min.js' %}"></script>
 <script>$(function () {
-  $('[data-toggle="popover"]').popover({html: true})
+    $('[data-toggle="popover"]').popover({html: true})
 })
 $('.dropdown-toggle').dropdown()
 
-                $('.popover-dismiss').popover({
-  trigger: 'focus'
+$('.popover-dismiss').popover({
+    trigger: 'focus'
 })
-    </script>
+</script>
 <script src="{% static 'events/scripts.js' %}"></script>
 </body>
 </html>
