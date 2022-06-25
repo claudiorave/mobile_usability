@@ -58,7 +58,7 @@
     var array = path.split("/")
     const session = array[2]
     const chatSocket = new WebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
         + '/ws/'
         + session
@@ -71,7 +71,7 @@
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
         const chatSocket = new WebSocket(
-            'wss://'
+            'ws://'
             + window.location.host
             + '/ws/'
             + session
@@ -240,7 +240,7 @@
                 return elemento
             }
 
-            $("#mainCont").append('<span id="span0"  class="center">' + dataJSON[0].type + '<br>' + formattedDateFirst + '<br>' + '<div id ="xpath0">' + xpath(dataJSON[0]) + '</div>' + '</span>');
+            $("#mainCont").append('<span id="span0"  class="center">' + dataJSON[0].type + '<br>' + "Tarea " + dataJSON[0].tarea + '<br>' + formattedDateFirst + '<br>' + '<div id ="xpath0">' + xpath(dataJSON[0]) + '</div>' + '</span>');
             elementos = "";
 
             jsonElements = dataJSON[0].elements;
@@ -282,7 +282,7 @@
                 if (jsonElements.length > 0) {
                     jsonElements.forEach(e => elementos += e.xpath + "\n");
                 }
-                $("#mainCont").append('<span id="span' + i + '" class="right" >' + dataJSON[i].type + '<br>' + formattedDateThis + '<br>' + '<div id ="xpath' + i + '">' + xpath(dataJSON[i]) + '</div>' + '</span>');
+                $("#mainCont").append('<span id="span' + i + '" class="right" >' + dataJSON[i].type + '<br>' + "Tarea " + dataJSON[i].tarea + '<br>' + formattedDateThis + '<br>' + '<div id ="xpath' + i + '">' + xpath(dataJSON[i]) + '</div>' + '</span>');
                 var xPop = document.getElementById("xpath" + i);
                 xPop.setAttribute("data-container", "body");
                 xPop.setAttribute("data-toggle", "popover");
@@ -302,7 +302,7 @@
             if (jsonElements != undefined) {
                 jsonElements.forEach(e => elementos += e.xpath + "\n");
             }
-            $("#mainCont").append('<span id="span' + i + '" class="right">' + last.type + '<br>' + formattedDateLast + '<br>' + '<div id ="xpath' + i + '">' + xpath(dataJSON[i]) + '</div>' + '</span>');
+            $("#mainCont").append('<span id="span' + i + '" class="right">' + last.type + '<br>' + "Tarea " + dataJSON[i].tarea + '<br>' + formattedDateLast + '<br>' + '<div id ="xpath' + i + '">' + xpath(dataJSON[i]) + '</div>' + '</span>');
 
             var xPop = document.getElementById("xpath" + i);
             xPop.setAttribute("data-container", "body");

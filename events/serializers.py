@@ -39,7 +39,7 @@ class OrientationChangeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ['type', 'timestamp']
+        fields = ['type', 'timestamp', 'session', 'sitio', 'tarea']
 
 
 class MisClicksSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class MisClicksSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MisClicks
-        fields = ['type', 'x', 'y', 'elements', 'timestamp', 'session']
+        fields = ['type', 'x', 'y', 'elements', 'timestamp', 'session', 'sitio', 'tarea']
 
 class ClickSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True)
@@ -91,7 +91,7 @@ class ClickSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Click
-        fields = ['type', 'x', 'y', 'elements', 'timestamp', 'session']
+        fields = ['type', 'x', 'y', 'elements', 'timestamp', 'session', 'sitio', 'tarea']
 
 class PinchZoomSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True)
@@ -115,7 +115,7 @@ class PinchZoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PinchZoom
-        fields = ['type', 'elements', 'percentage', 'timestamp', 'session']
+        fields = ['type', 'elements', 'percentage', 'timestamp', 'session', 'sitio', 'tarea']
 
 
 class ScrollSerializer(serializers.ModelSerializer):
@@ -139,7 +139,7 @@ class ScrollSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Scroll
-        fields = ['type', 'scroll_points', 'timestamp', 'elements', 'session']
+        fields = ['type', 'scroll_points', 'timestamp', 'elements', 'session', 'sitio', 'tarea']
 
 
 class DeviceSerializer(serializers.ModelSerializer):
@@ -160,4 +160,4 @@ class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
         fields = ['type', 'phone', 'mobile', 'tablet', 'os', 'webkit', 'build', 'user_agent', 'height', 'width',
-                  'session']
+                  'session', 'sitio']

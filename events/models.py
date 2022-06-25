@@ -7,6 +7,8 @@ class Event(models.Model):
     type = models.CharField(max_length=50)
     timestamp = models.DateTimeField(null=True, blank=True)
     session = models.ForeignKey("Session", on_delete=models.CASCADE, related_name="events", null=True, blank=True)
+    tarea= models.PositiveIntegerField(null=True, blank=True)
+    sitio = models.ForeignKey("Sitio", on_delete=models.CASCADE, related_name="events", null=True, blank=True, default=None)
 
     class Meta:
         abstract = False
@@ -61,15 +63,5 @@ class Session(models.Model):
     active = models.BooleanField(default=True)
 
 class Sitio(models.Model):
-    nombre = models.CharField(max_length=100, unique=True, primary_key=True)
+    nombre = models.CharField(max_length=100)
     corregido = models.BooleanField()
-    publications = models.ManyToManyField(Session)
-
-class Tarea(models.Model):
-    numero = models.CharField(max_length=10)
-    descripcion = models.TextField(null=True, blank=True)
-    sitio = models.ForeignKey(Sitio, on_delete=models.CASCADE, related_name="elements", null=True, blank=True)
-
-
-
-

@@ -19,7 +19,7 @@
     var array = path.split("/")
     const session = array[2]
     const chatSocket = new WebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
         + '/ws/'
         + session
@@ -33,7 +33,7 @@
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
         const chatSocket = new WebSocket(
-            'wss://'
+            'ws://'
             + window.location.host
             + '/ws/'
             + session

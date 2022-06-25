@@ -1,0 +1,26 @@
+[
+  {
+    "model": "events.sitio",
+    "pk": 1,
+    "fields": {
+      "nombre": "IOMA",
+      "corregido": false
+    }
+  },
+  {
+    "model": "events.sitio",
+    "pk": 2,
+    "fields": {
+      "nombre": "IOMA",
+      "corregido": true
+    }
+  },
+  {
+    "model": "events.sitio",
+    "pk": 3,
+    "fields": {
+      "nombre": "Testing",
+      "corregido": false
+    }
+  }
+]
