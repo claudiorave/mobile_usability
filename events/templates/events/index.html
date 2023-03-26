@@ -18,11 +18,14 @@
                 var cell3 = row.insertCell(2);
                 var cell4 = row.insertCell(3);
                 var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+
 
 // Add some text to the new cells:
                 cell1.innerHTML = json.x;
                 cell2.innerHTML = json.y;
                 cell5.innerHTML = json.tarea;
+                cell6.innerHTML = json.sitio;
                 let datetime = new Date(json.timestamp);
                 let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
                 let elementos = "";
@@ -41,7 +44,9 @@
                 var cell1 = row.insertCell(0);
                 var cell2 = row.insertCell(1);
                 var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
                 cell3.innerHTML = json.tarea;
+                                cell4.innerHTML = json.sitio.nombre + (json.sitio.corregido && " corregido");
                 let elementos = "";
                 json.elements.forEach(e => elementos += e.xpath + "\n");
                 let datetime = new Date(json.timestamp);
@@ -62,17 +67,21 @@
                 var cell2 = row.insertCell(1);
                 var cell3 = row.insertCell(2);
                 var cell4 = row.insertCell(3);
+                                var cell5 = row.insertCell(4);
+                                                                cell5.innerHTML = json.sitio;
                 let datetime = new Date(json.timestamp);
                 let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
                 cell1.innerHTML = formatted_date;
                 cell2.innerHTML = json["scroll_points"];
                 cell3.innerHTML = json["scroll_objects"];
                 cell4.innerHTML = json.tarea;
+
             } else if (json.type === "orientationchange") {
-                console.log(json)
                 var cell1 = row.insertCell(0);
                 var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
                 cell2.innerHTML = json.tarea;
+                cell3.innerHTML = json.sitio;
                 let datetime = new Date(json.timestamp);
                 let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
                 cell1.innerHTML = formatted_date;
@@ -103,12 +112,14 @@
                 var cell3 = row.insertCell(2);
                 var cell4 = row.insertCell(3);
                 var cell5 = row.insertCell(4);
+                                var cell6 = row.insertCell(5);
 
 
 // Add some text to the new cells:
                 cell1.innerHTML = json.x;
                 cell2.innerHTML = json.y;
                 cell5.innerHTML = json.tarea;
+                                cell6.innerHTML = json.sitio;
                 let datetime = new Date(json.timestamp);
                 let formatted_date = datetime.getDate().toString().padStart(2, "0") + "-" + (datetime.getMonth() + 1).toString().padStart(2, "0") + "-" + datetime.getFullYear().toString().substr(-2) + " " + datetime.getHours() + ":" + datetime.getMinutes().toString().padStart(2, "0") + ":" + datetime.getSeconds().toString().padStart(2, "0")
                 let elementos = "";
@@ -118,7 +129,7 @@
                 cell4.setAttribute("data-toggle", "popover")
                 cell4.setAttribute("data-content", elementos)
                 cell4.setAttribute("data-placement", "left")
-                cell4.innerHTML = json.elements[0].xpath
+                cell4.innerHTML = json.elements[0].hasOwnProperty("xpath") ? json.elements[0].xpath : " "
                 $(function () {
                     $('[data-toggle="popover"]').popover({html: true})
                 })
@@ -157,6 +168,9 @@
             <th>
                 tarea
             </th>
+            <th>
+                sitio
+            </th>
             {% for click in click_list %}
                 <tr>
                     <td>{{ click.x }}</td>
@@ -170,6 +184,7 @@
 
                     </td>
                     <td>{{ click.tarea }}</td>
+                    <td>{{ click.sitio.nombre }} {% if click.sitio.corregido %} corregido {% endif %}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -193,6 +208,9 @@
             <th>
                 tarea
             </th>
+            <th>
+                sitio
+            </th>
             <tbody>
             {% for misclicks in misclicks_list %}
                 <tr>
@@ -207,6 +225,7 @@
 
                     </td>
                     <td>{{ misclicks.tarea }}</td>
+                    <td>{{ misclicks.sitio.nombre }} {% if misclicks.sitio.corregido %} corregido {% endif %}</td>
 
                 </tr>
             {% endfor %}
@@ -225,6 +244,9 @@
             <th>
                 tarea
             </th>
+              <th>
+                sitio
+            </th>
             {% for pinchzoom in pinchzoom_list %}
                 <tr>
                     <td>{{ pinchzoom.timestamp }}</td>
@@ -236,6 +258,7 @@
 
                     </td>
                     <td>{{ pinchzoom.tarea }}</td>
+                    <td>{{ pinchzoom.sitio.nombre }} {% if pinchzoom.sitio.corregido %} corregido {% endif %}</td>
 
                 </tr>
             {% endfor %}
@@ -256,12 +279,17 @@
             <th>
                 tarea
             </th>
+             <th>
+                sitio
+            </th>
             {% for scroll in scroll_list %}
                 <tr>
                     <td>{{ scroll.timestamp }}</td>
                     <td>{{ scroll.scroll_points }}</td>
                     <td>{{ scroll.scroll_objects }}</td>
                     <td>{{ scroll.tarea }}</td>
+                                        <td>{{ scroll.sitio.nombre }} {% if scroll.sitio.corregido %} corregido {% endif %}</td>
+
                 </tr>
             {% endfor %}
         </table>
