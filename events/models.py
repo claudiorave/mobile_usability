@@ -65,3 +65,9 @@ class Session(models.Model):
 class Sitio(models.Model):
     nombre = models.CharField(max_length=100)
     corregido = models.BooleanField()
+
+    def __str__(self):
+        str = self.nombre
+        if self.corregido:
+            str = str + ' corregido'
+        return str

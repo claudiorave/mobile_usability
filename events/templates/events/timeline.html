@@ -56,7 +56,7 @@
     var array = path.split("/")
     const session = array[2]
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/'
         + session

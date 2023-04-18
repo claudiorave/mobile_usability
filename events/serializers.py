@@ -7,6 +7,7 @@ event_created = django.dispatch.Signal()
 
 
 class EventSerializer(serializers.ModelSerializer):
+    sitio = serializers.StringRelatedField()
     class Meta:
         model = Event
         fields = '__all__'
@@ -25,6 +26,12 @@ class ElementSerializer(serializers.ModelSerializer):
 
 
 class OrientationChangeSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['sitio'] = instance.sitio.nombre
+        if instance.sitio.corregido:
+            representation['sitio'] = representation['sitio'] + ' corregido'
+        return representation
     def create(self, validated_data):
         session_token = validated_data.pop('session')
         if Session.objects.filter(token=session_token).count() == 0:
@@ -46,6 +53,12 @@ class MisClicksSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True)
     session = serializers.CharField(max_length=200)
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['sitio'] = instance.sitio.nombre
+        if instance.sitio.corregido:
+            representation['sitio'] = representation['sitio'] + ' corregido'
+        return representation
     def create(self, validated_data):
         session_token = validated_data.pop('session')
         if Session.objects.filter(token=session_token).count() == 0:
@@ -71,6 +84,12 @@ class MisClicksSerializer(serializers.ModelSerializer):
 class ClickSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True)
     session = serializers.CharField(max_length=200)
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['sitio'] = instance.sitio.nombre
+        if instance.sitio.corregido:
+            representation['sitio'] = representation['sitio'] + ' corregido'
+        return representation
 
     def create(self, validated_data):
         session_token = validated_data.pop('session')
@@ -97,6 +116,12 @@ class PinchZoomSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True)
     session = serializers.CharField(max_length=200)
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['sitio'] = instance.sitio.nombre
+        if instance.sitio.corregido:
+            representation['sitio'] = representation['sitio'] + ' corregido'
+        return representation
     def create(self, validated_data):
         session_token = validated_data.pop('session')
         if Session.objects.filter(token=session_token).count() == 0:
@@ -122,6 +147,12 @@ class ScrollSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True)
     session = serializers.CharField(max_length=200)
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['sitio'] = instance.sitio.nombre
+        if instance.sitio.corregido:
+            representation['sitio'] = representation['sitio'] + ' corregido'
+        return representation
     def create(self, validated_data):
         session_token = validated_data.pop('session')
         if Session.objects.filter(token=session_token).count() == 0:
@@ -161,3 +192,9 @@ class DeviceSerializer(serializers.ModelSerializer):
         model = Device
         fields = ['type', 'phone', 'mobile', 'tablet', 'os', 'webkit', 'build', 'user_agent', 'height', 'width',
                   'session', 'sitio']
+
+
+class SitioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sitio
+        fields = ['nombre', 'corregido']
