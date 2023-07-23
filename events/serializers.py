@@ -26,6 +26,7 @@ class ElementSerializer(serializers.ModelSerializer):
 
 
 class OrientationChangeSerializer(serializers.ModelSerializer):
+    session = serializers.CharField(max_length=200)
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['sitio'] = instance.sitio.nombre
@@ -191,7 +192,7 @@ class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
         fields = ['type', 'phone', 'mobile', 'tablet', 'os', 'webkit', 'build', 'user_agent', 'height', 'width',
-                  'session', 'sitio']
+                  'session']
 
 
 class SitioSerializer(serializers.ModelSerializer):
