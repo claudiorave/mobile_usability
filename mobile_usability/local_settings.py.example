@@ -1,0 +1,10 @@
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'logger',
+        'USER': 'craverta',
+        'PASSWORD': 'McCaco1985',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}

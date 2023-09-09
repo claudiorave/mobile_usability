@@ -168,3 +168,9 @@ LOGGING = {
         },
     },
 }
+
+# Incorporo las configuraciones locales - Las que hay que modificar por ambiente
+try:
+    from .local_settings import *
+except ImportError:
+    pass
