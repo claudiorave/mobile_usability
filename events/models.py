@@ -61,6 +61,8 @@ class Device(models.Model):
 class Session(models.Model):
     token = models.CharField(max_length=100, unique=True, primary_key= True)
     active = models.BooleanField(default=True)
+    complete = models.BooleanField(default=True)
+
 
 class Sitio(models.Model):
     nombre = models.CharField(max_length=100)
