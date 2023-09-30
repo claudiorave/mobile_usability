@@ -62,6 +62,8 @@ class Session(models.Model):
     token = models.CharField(max_length=100, unique=True, primary_key= True)
     active = models.BooleanField(default=True)
     complete = models.BooleanField(default=True)
+    complete_balcon = models.BooleanField(default=True)
+    complete_ioma = models.BooleanField(default=True)
 
 
 class Sitio(models.Model):
