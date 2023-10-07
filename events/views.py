@@ -26,7 +26,7 @@ class ScrollViewSet(ModelViewSet):
     serializer_class = ScrollSerializer
 
 class SessionViewSet(ModelViewSet):
-    queryset = Session.objects.filter(complete=True)
+    queryset = Session.objects.filter(complete_balcon=True)
     serializer_class = SessionSerializer
 
 class EventViewSet(ModelViewSet):
@@ -60,7 +60,7 @@ class EventViewSet(ModelViewSet):
             return ClickSerializer
 
 def home(request):
-    session = Session.objects.filter(complete=True)
+    session = Session.objects.filter(complete_balcon=True)
     context = {
         'session_list':session
     }
@@ -106,7 +106,7 @@ def unificada(request, session):
 
 
 def timeline(request, session):
-    session_list = Session.objects.filter(complete=True)
+    session_list = Session.objects.filter(complete_balcon=True)
     misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')
     serializer = MisClicksSerializer(misclicks_list, many=True)
     misclicks_data = serializer.data
@@ -143,7 +143,7 @@ def timeline(request, session):
     return HttpResponse(template.render(context, request))
 
 def timeline_extra(request, session):
-    session_list = Session.objects.filter(complete=True)
+    session_list = Session.objects.filter(complete_balcon=True)
     misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')
     serializer = MisClicksSerializer(misclicks_list, many=True)
     misclicks_data = serializer.data
