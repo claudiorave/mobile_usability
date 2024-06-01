@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from django.http import HttpResponse
 from django.template import loader
+from django.db import connection
 from django.shortcuts import redirect
 from .models import *
 from .serializers import *
@@ -67,7 +68,247 @@ def home(request):
     template =loader.get_template('events/home.html')
     return HttpResponse(template.render(context, request))
 
+def tiempo_eventos_sitio(request):
+    def my_custom_sql():
 
+        with connection.cursor() as cursor:
+            cursor.execute('''
+          SELECT 
+   sitio_id,
+   nombre,
+   corregido,
+AVG(tiempo_total),
+ROUND( AVG(conteo)::numeric, 2 ) as conteo_eventos
+FROM
+(SELECT 
+   session_id,
+   nombre,
+   corregido,
+   sitio_id,
+   COUNT(*) as conteo,
+   MAX(timestamp) - MIN(timestamp) as tiempo_total
+FROM 
+   public.events_event E JOIN public.events_session S ON E.session_id = S.token JOIN public.events_sitio SI ON E.sitio_id = SI.id
+WHERE
+ S.complete = true 
+GROUP BY 
+   session_id,
+ nombre,
+   corregido,
+   sitio_id
+ORDER BY
+   session_id
+) AS popcorn
+GROUP BY
+   sitio_id,
+   nombre,
+   corregido
+ORDER BY
+   sitio_id
+   ;
+
+            ''')
+            row = cursor.fetchall()
+
+        return row
+    session = Session.objects.filter(complete_balcon=True)
+
+    sitios = Sitio.objects.all()
+    context = {
+        'session_list': session,
+        'sitios':sitios,
+        'custom_sql': my_custom_sql(),
+    }
+    template =loader.get_template('events/tiempo_eventos_sitio.html')
+    return HttpResponse(template.render(context, request))
+
+def tiempo_eventos_sitio_sesiones(request):
+    def my_custom_sql():
+        raw_query = """
+    SELECT 
+  session_id,
+   sitio_id,
+   nombre,
+   corregido,
+AVG(tiempo_total),
+ROUND( AVG(conteo)::numeric, 2 ) as conteo_eventos
+FROM
+(SELECT 
+   session_id,
+   nombre,
+   corregido,
+   sitio_id,
+   COUNT(*) as conteo,
+   MAX(timestamp) - MIN(timestamp) as tiempo_total
+FROM 
+   public.events_event E JOIN public.events_session S ON E.session_id = S.token JOIN public.events_sitio SI ON E.sitio_id = SI.id
+WHERE
+ S.complete = true 
+GROUP BY 
+   session_id,
+ nombre,
+   corregido,
+   sitio_id
+ORDER BY
+   session_id
+) AS popcorn
+GROUP BY
+   sitio_id,
+   nombre,
+   corregido,
+   session_id
+ORDER BY
+   sitio_id
+   ;
+"""
+        with connection.cursor() as cursor:
+            cursor.execute(raw_query)
+            row = cursor.fetchall()
+
+        return row
+    session = Session.objects.filter(complete_balcon=True)
+
+    context = {
+        'session_list': session,
+        'custom_sql':my_custom_sql()
+    }
+    template =loader.get_template('events/tiempo_eventos_sitio_sesiones.html')
+    return HttpResponse(template.render(context, request))
+def tiempo_eventos_sitio_tipo(request):
+    def my_custom_sql():
+        raw_query = """
+        SELECT 
+        sitio_id,
+        nombre,
+        corregido,
+        type,
+        AVG(tiempo_total),
+        ROUND( AVG(conteo)::numeric, 2 ) as conteo_eventos
+        FROM
+        (SELECT 
+           session_id,
+           sitio_id,
+           nombre,
+           corregido,
+           type,
+           COUNT(*) as conteo,
+           MAX(timestamp) - MIN(timestamp) as tiempo_total
+        FROM 
+           public.events_event E JOIN public.events_session S ON E.session_id = S.token JOIN public.events_sitio SI ON E.sitio_id = SI.id
+        WHERE
+         S.complete = true 
+        GROUP BY 
+           session_id,
+           sitio_id,
+         nombre,
+           corregido,
+           tarea,
+           type
+        ORDER BY
+           session_id
+        ) AS popcorn
+        GROUP BY
+           sitio_id,
+           nombre,
+           corregido,
+           type
+        ORDER BY
+        sitio_id
+           ;
+            """
+        with connection.cursor() as cursor:
+            cursor.execute(raw_query)
+            row = cursor.fetchall()
+
+        return row
+
+    myorder = [0, 5, 2, 3, 1, 6, 10, 12, 9, 14, 16, 19, 17, 20, 15, 18]
+    mylist = [my_custom_sql()[i] for i in myorder]
+    session = Session.objects.filter(complete_balcon=True)
+
+    context = {
+        'session_list': session,
+        'custom_sql':mylist
+    }
+    template =loader.get_template('events/tiempo_eventos_sitio_tipo.html')
+    return HttpResponse(template.render(context, request))
+
+def tiempo_eventos_sitio_tarea(request):
+    def my_custom_sql():
+        raw_query = """
+        SELECT 
+sitio_id,
+tarea,
+nombre,
+corregido,
+AVG(tiempo_total),
+ROUND( AVG(conteo)::numeric, 2 ) as conteo_eventos
+FROM
+(SELECT 
+   session_id,
+   sitio_id,
+   nombre,
+   corregido,
+   tarea,
+   COUNT(*) as conteo,
+   MAX(timestamp) - MIN(timestamp) as tiempo_total
+FROM 
+   public.events_event E JOIN public.events_session S ON E.session_id = S.token JOIN public.events_sitio SI ON E.sitio_id = SI.id
+WHERE
+ S.complete = true 
+GROUP BY 
+   session_id,
+   sitio_id,
+ nombre,
+   corregido,
+   tarea
+ORDER BY
+   session_id,
+   tarea
+) AS popcorn
+GROUP BY
+   sitio_id,
+   nombre,
+   corregido,
+   tarea
+ORDER BY
+sitio_id,
+tarea
+   ;
+
+            """
+        with connection.cursor() as cursor:
+            cursor.execute(raw_query)
+            row = cursor.fetchall()
+
+        return row
+
+    dict = {
+        "IOMA0": "Intro",
+        "IOMA1": "Cerrar popups",
+        "IOMA2": "Encontrar texto",
+        "IOMA3": "Usar buscador",
+        "Balcon0": "Intro",
+        "Balcon1": "Abrir menú y encontrar opción",
+        "Balcon2": "Usar buscador",
+        "Balcon3": "Usar form con submit",
+        "Balcon4": "Encontrar planta menor precio",
+        "Kabytes0": "Intro",
+        "Kabytes1": "Abrir menú y encontrar opción",
+        "Kabytes2": "Usar buscador",
+        "Kabytes3": "Presionar 3 botones LEER MÁS"
+    }
+    myorder = [0, 4, 1, 5, 2, 6, 3, 7, 8, 12, 9 , 13, 10, 14, 11, 15, 16, 20, 17, 21, 18, 22, 19, 23]
+    mylist = [my_custom_sql()[i] for i in myorder]
+    session = Session.objects.filter(complete_balcon=True)
+
+    context = {
+        'session_list': session,
+        'custom_sql':mylist,
+        'dict': dict
+    }
+    template =loader.get_template('events/tiempo_eventos_sitio_tarea.html')
+    return HttpResponse(template.render(context, request))
 def index(request, session):
     misclicks_list = MisClicks.objects.filter(session=session).order_by('-timestamp')
     click_list = Click.objects.filter(session=session).order_by('-timestamp')
@@ -186,3 +427,19 @@ def reset(request, path):
         return redirect("/")
     else:
         return redirect("/eventos/" + path)
+
+def metrica(request):
+    session = Session.objects.filter(complete_balcon=True)
+    context = {
+        'session_list':session
+    }
+    template =loader.get_template('events/metrica.html')
+    return HttpResponse(template.render(context, request))
+
+def crear(request):
+    session = Session.objects.filter(complete_balcon=True)
+    context = {
+        'session_list':session
+    }
+    template =loader.get_template('events/crear.html')
+    return HttpResponse(template.render(context, request))

@@ -1,0 +1,39 @@
+{% extends "events/home.html" %}
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+    <section>
+    <h2>
+        Conteo de eventos y tiempo total por sitio y por sesión
+    </h2>
+<table class="table table-striped" id="misclick">
+    <tr>
+<th>Sesión</th>
+<th>Sitio</th>
+<th>Conteo eventos</th>
+        <th>Tiempo</th>
+</tr>
+    {% for tuple in custom_sql %}
+        <tr>
+        <td>
+                                <a href="/eventos/{{ tuple.0 }}/">{{ tuple.0 }}</a>
+
+        </td>
+      <td>{{ tuple.2 }}
+            {% if tuple.3 %}
+         corregido
+            {% endif %}
+        </td>
+        <td>
+            {{ tuple.5 }}
+        </td>
+        <td>
+            {{ tuple.4 }}
+        </td>
+        </tr>
+    {% endfor %}
+</table>
+
+</section>
+    {{ custom_sql }}
+{% endblock %}

@@ -70,7 +70,7 @@
         chatSocket.onclose = function (e) {
             console.error('Chat socket closed unexpectedly');
             const chatSocket = new WebSocket(
-                'wss://'
+                'ws://'
                 + window.location.host
                 + '/ws/'
                 + session

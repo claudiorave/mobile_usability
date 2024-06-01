@@ -15,6 +15,12 @@ router.register(r'session', SessionViewSet, basename='session')
 
 urlpatterns = [
     path('', home, name='home'),
+    path('metrica', metrica, name='metrica'),
+    path('crear', crear, name='crear'),
+    path('tiempo_eventos_sitio', tiempo_eventos_sitio, name='tiempo_eventos_sitio'),
+    path('tiempo_eventos_sitio_sesiones', tiempo_eventos_sitio_sesiones, name='tiempo_eventos_sitio_sesiones'),
+    path('tiempo_eventos_sitio_tipo', tiempo_eventos_sitio_tipo, name='tiempo_eventos_sitio_tipo'),
+    path('tiempo_eventos_sitio_tarea', tiempo_eventos_sitio_tarea, name='tiempo_eventos_sitio_tarea'),
     path('eventos/<str:session>/', index, name='index'),
     path('reset/<str:path>/', reset, name='index'),
     path('unificada/<str:session>/', unificada, name='unificada'),

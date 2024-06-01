@@ -27,7 +27,6 @@
     );
     chatSocket.onmessage = function (e) {
         json = JSON.parse(e.data).message;
-        console.log(json);
     }
 
     chatSocket.onclose = function (e) {

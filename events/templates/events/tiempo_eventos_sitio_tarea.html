@@ -1,0 +1,41 @@
+{% extends "events/home.html" %}
+{% load events_extras %}
+
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+    <section>
+    <h2>
+        Conteo de eventos y tiempo total por sitio y tarea
+    </h2>
+<table class="table table-striped" id="misclick">
+    <tr>
+<th>Sitio</th>
+<th>Tarea</th>
+<th>Promedio duración</th>
+<th>Promedio conteo eventos</th>
+</tr>
+    {% for tuple in custom_sql %}
+        <tr>
+        <td>{{ tuple.2 }}
+            {% if tuple.3 %}
+         corregido
+            {% endif %}
+        </td>
+        <td>
+            {% with tuple.2|addstr:tuple.1 as key %}
+            {{ dict|get_item:key }}
+            {% endwith %}
+        </td>
+        <td>
+            {{ tuple.4 }}
+        </td>
+        <td>
+            {{ tuple.5 }}
+        </td>
+        </tr>
+    {% endfor %}
+</table>
+{{ dict }}
+</section>
+{% endblock %}
